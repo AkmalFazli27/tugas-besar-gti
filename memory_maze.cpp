@@ -2,10 +2,12 @@
 //  MEMORY MAZE — Struktur Maze Dasar
 //  Tahap 1: Maze layout, dinding, lantai, kamera first-person
 //
-//  Kompilasi Windows (MinGW):
-//    g++ memory_maze.cpp -o memory_maze -lfreeglut -lopengl32 -lglu32
-//  Kompilasi Linux:
-//    g++ memory_maze.cpp -o memory_maze -lglut -lGL -lGLU -lm
+//  # Compile
+//  C:\msys64\mingw64\bin\g++.exe memory_maze.cpp -o memory_maze.exe -lfreeglut -lopengl32 -lglu32
+
+//  # Run (tambahkan PATH runtime freeglut)
+//  $env:Path = "C:\msys64\mingw64\bin;$env:Path"
+//  .\memory_maze.exe
 // ============================================================
 
 #include <GL/glut.h>
@@ -420,23 +422,30 @@ void display() {
     // Render posisi player sebagai titik kecil di top-down
     if (viewMode == 1) {
         glDisable(GL_LIGHTING);
-        // Lingkaran kecil posisi player (kuning)
+        glDisable(GL_DEPTH_TEST);
+
+        // Marker player (kuning) — digambar di atas maze agar selalu terlihat
+        float py = W_HEIGHT + 0.06f;
         glColor3f(1.0f, 1.0f, 0.0f);
-        glPushMatrix();
-            glTranslatef(cam.x, 0.05f, cam.z);
-            glScalef(0.3f, 0.3f, 0.3f);
-            glutSolidSphere(0.5f, 8, 8);
-        glPopMatrix();
+        glBegin(GL_TRIANGLE_FAN);
+            glVertex3f(cam.x, py, cam.z);
+            for (int i = 0; i <= 24; i++) {
+                float a = toRad(i * (360.0f / 24.0f));
+                glVertex3f(cam.x + cosf(a) * 0.22f, py, cam.z + sinf(a) * 0.22f);
+            }
+        glEnd();
 
         // Garis arah hadap player
         float rad = toRad(cam.angle);
         glColor3f(1.0f, 0.5f, 0.0f);
-        glLineWidth(2.0f);
+        glLineWidth(2.5f);
         glBegin(GL_LINES);
-            glVertex3f(cam.x, 0.1f, cam.z);
-            glVertex3f(cam.x + sinf(rad)*0.8f, 0.1f, cam.z + cosf(rad)*0.8f);
+            glVertex3f(cam.x, py, cam.z);
+            glVertex3f(cam.x + sinf(rad)*0.9f, py, cam.z + cosf(rad)*0.9f);
         glEnd();
         glLineWidth(1.0f);
+
+        glEnable(GL_DEPTH_TEST);
         glEnable(GL_LIGHTING);
     }
 
@@ -463,8 +472,8 @@ void update(int v) {
 
         if (keys['w'] || keys['W']) { dx += sinf(rad)*spd; dz += cosf(rad)*spd; }
         if (keys['s'] || keys['S']) { dx -= sinf(rad)*spd; dz -= cosf(rad)*spd; }
-        if (keys['a'] || keys['A']) cam.angle -= trn;
-        if (keys['d'] || keys['D']) cam.angle += trn;
+        if (keys['a'] || keys['A']) cam.angle += trn;
+        if (keys['d'] || keys['D']) cam.angle -= trn;
 
         // Collision dengan margin
         float m  = 0.4f;

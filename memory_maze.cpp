@@ -385,8 +385,12 @@ void display() {
         float mazeW = COLS * CELL;
         float mazeD = ROWS * CELL;
         float pad   = CELL;
-
-        glOrtho(-pad, mazeW + pad, -pad, mazeD + pad, -10, 10);
+        // Penting: kamera berada di tengah maze, jadi volume ortho harus
+        // dipusatkan di (0,0) pada eye-space (bukan dari 0..mazeW/mazeD).
+        // Jika tidak, hanya sebagian maze yang terlihat (ter-clipping).
+        float halfW = mazeW * 0.5f + pad;
+        float halfD = mazeD * 0.5f + pad;
+        glOrtho(-halfW, halfW, -halfD, halfD, 0.1, 50.0);
 
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();

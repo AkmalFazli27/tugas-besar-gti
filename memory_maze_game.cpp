@@ -33,6 +33,10 @@ const int   COLS      = 15;
 const float CELL      = 2.0f;     // ukuran 1 sel (unit OpenGL)
 const float W_HEIGHT  = 3.0f;     // tinggi dinding
 
+// Texture IDs
+GLuint texWall = 0;
+GLuint texFloor = 0;
+
 //  Legenda:
 //  1 = dinding
 //  0 = lorong
@@ -68,7 +72,7 @@ const float FIRST_PERSON_FOV   = 54.0f;
 const float FIRST_PERSON_FAR   = 38.0f;
 const float MEMORIZE_DURATION  = 7.0f;
 const float GAME_DURATION      = 180.0f;
-const int   FLASHLIGHT_USES    = 3;
+const int   GHT_USES    = 3;FLASHLI
 const float FLASHLIGHT_DURATION= 5.0f;
 const int   MAP_REVEAL_USES    = 3;
 const float MAP_REVEAL_DURATION= 4.0f;
@@ -163,6 +167,54 @@ int viewMode = 0;
 // ============================================================
 //  UTILITY
 // ============================================================
+// Buat texture checker sederhana.
+void buildChecker(unsigned char* data, int size, int checkSize,
+                  const unsigned char c1[3], const unsigned char c2[3]) {
+    for (int y = 0; y < size; y++) {
+        for (int x = 0; x < size; x++) {
+            int idx = (y * size + x) * 3;
+            int checker = ((x / checkSize) + (y / checkSize)) % 2;
+            const unsigned char* c = checker ? c1 : c2;
+            data[idx + 0] = c[0];
+            data[idx + 1] = c[1];
+            data[idx + 2] = c[2];
+        }
+    }
+}
+
+// Inisialisasi texture tembok dan lantai.
+void initTextures() {
+    const int size = 64;
+    static unsigned char wallData[size * size * 3];
+    static unsigned char floorData[size * size * 3];
+
+    const unsigned char wallA[3]  = {90, 70, 55};
+    const unsigned char wallB[3]  = {60, 45, 35};
+    const unsigned char floorA[3] = {55, 45, 38};
+    const unsigned char floorB[3] = {30, 25, 20};
+
+    buildChecker(wallData, size, 8, wallA, wallB);
+    buildChecker(floorData, size, 6, floorA, floorB);
+
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+    glGenTextures(1, &texWall);
+    glBindTexture(GL_TEXTURE_2D, texWall);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, size, size, 0, GL_RGB, GL_UNSIGNED_BYTE, wallData);
+
+    glGenTextures(1, &texFloor);
+    glBindTexture(GL_TEXTURE_2D, texFloor);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, size, size, 0, GL_RGB, GL_UNSIGNED_BYTE, floorData);
+}
+
 // Konversi derajat ke radian.
 float toRad(float deg) { return deg * 3.14159265f / 180.0f; }
 
@@ -358,37 +410,43 @@ void drawWall(int col, int row) {
     float z0 = row * CELL,  z1 = z0 + CELL;
     float y0 = 0.0f,         y1 = W_HEIGHT;
 
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, texWall);
+    glColor3f(1.0f, 1.0f, 1.0f);
+
     glBegin(GL_QUADS);
         glNormal3f(0, 0, 1);
-        glVertex3f(x0, y0, z1);
-        glVertex3f(x1, y0, z1);
-        glVertex3f(x1, y1, z1);
-        glVertex3f(x0, y1, z1);
+        glTexCoord2f(0.0f, 0.0f); glVertex3f(x0, y0, z1);
+        glTexCoord2f(1.0f, 0.0f); glVertex3f(x1, y0, z1);
+        glTexCoord2f(1.0f, 1.0f); glVertex3f(x1, y1, z1);
+        glTexCoord2f(0.0f, 1.0f); glVertex3f(x0, y1, z1);
 
         glNormal3f(0, 0, -1);
-        glVertex3f(x1, y0, z0);
-        glVertex3f(x0, y0, z0);
-        glVertex3f(x0, y1, z0);
-        glVertex3f(x1, y1, z0);
+        glTexCoord2f(0.0f, 0.0f); glVertex3f(x1, y0, z0);
+        glTexCoord2f(1.0f, 0.0f); glVertex3f(x0, y0, z0);
+        glTexCoord2f(1.0f, 1.0f); glVertex3f(x0, y1, z0);
+        glTexCoord2f(0.0f, 1.0f); glVertex3f(x1, y1, z0);
 
         glNormal3f(-1, 0, 0);
-        glVertex3f(x0, y0, z0);
-        glVertex3f(x0, y0, z1);
-        glVertex3f(x0, y1, z1);
-        glVertex3f(x0, y1, z0);
+        glTexCoord2f(0.0f, 0.0f); glVertex3f(x0, y0, z0);
+        glTexCoord2f(1.0f, 0.0f); glVertex3f(x0, y0, z1);
+        glTexCoord2f(1.0f, 1.0f); glVertex3f(x0, y1, z1);
+        glTexCoord2f(0.0f, 1.0f); glVertex3f(x0, y1, z0);
 
         glNormal3f(1, 0, 0);
-        glVertex3f(x1, y0, z1);
-        glVertex3f(x1, y0, z0);
-        glVertex3f(x1, y1, z0);
-        glVertex3f(x1, y1, z1);
+        glTexCoord2f(0.0f, 0.0f); glVertex3f(x1, y0, z1);
+        glTexCoord2f(1.0f, 0.0f); glVertex3f(x1, y0, z0);
+        glTexCoord2f(1.0f, 1.0f); glVertex3f(x1, y1, z0);
+        glTexCoord2f(0.0f, 1.0f); glVertex3f(x1, y1, z1);
 
         glNormal3f(0, 1, 0);
-        glVertex3f(x0, y1, z0);
-        glVertex3f(x0, y1, z1);
-        glVertex3f(x1, y1, z1);
-        glVertex3f(x1, y1, z0);
+        glTexCoord2f(0.0f, 0.0f); glVertex3f(x0, y1, z0);
+        glTexCoord2f(1.0f, 0.0f); glVertex3f(x0, y1, z1);
+        glTexCoord2f(1.0f, 1.0f); glVertex3f(x1, y1, z1);
+        glTexCoord2f(0.0f, 1.0f); glVertex3f(x1, y1, z0);
     glEnd();
+
+    glDisable(GL_TEXTURE_2D);
 }
 
 // ============================================================
@@ -399,15 +457,22 @@ void drawFloor() {
     float tw = COLS * CELL;
     float td = ROWS * CELL;
 
-    glColor3f(0.08f, 0.07f, 0.06f);
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, texFloor);
+    glColor3f(1.0f, 1.0f, 1.0f);
+
+    float tu = COLS / 2.0f;
+    float tv = ROWS / 2.0f;
 
     glBegin(GL_QUADS);
         glNormal3f(0, 1, 0);
-        glVertex3f(0,  0, 0);
-        glVertex3f(tw, 0, 0);
-        glVertex3f(tw, 0, td);
-        glVertex3f(0,  0, td);
+        glTexCoord2f(0.0f, 0.0f); glVertex3f(0,  0, 0);
+        glTexCoord2f(tu,  0.0f); glVertex3f(tw, 0, 0);
+        glTexCoord2f(tu,  tv);  glVertex3f(tw, 0, td);
+        glTexCoord2f(0.0f, tv);  glVertex3f(0,  0, td);
     glEnd();
+
+    glDisable(GL_TEXTURE_2D);
 }
 
 // ============================================================
@@ -1051,6 +1116,8 @@ void initGL() {
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_NORMALIZE);
     glClearColor(0.02f, 0.02f, 0.03f, 1.0f);
+
+    initTextures();
 
     GLfloat matSpec[] = {0.2f, 0.18f, 0.12f, 1.0f};
     glMaterialfv(GL_FRONT, GL_SPECULAR,  matSpec);

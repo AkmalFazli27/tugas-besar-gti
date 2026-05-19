@@ -28,8 +28,8 @@ const char* WIN_NAME = "Memory Maze — Game";
 // ============================================================
 //  KONFIGURASI MAZE
 // ============================================================
-const int   ROWS      = 20;
-const int   COLS      = 20;
+const int   ROWS      = 15;
+const int   COLS      = 15;
 const float CELL      = 2.0f;     // ukuran 1 sel (unit OpenGL)
 const float W_HEIGHT  = 3.0f;     // tinggi dinding
 
@@ -40,35 +40,32 @@ const float W_HEIGHT  = 3.0f;     // tinggi dinding
 //  E = exit (disimpan terpisah, di grid tetap 0)
 
 int maze[ROWS][COLS] = {
-    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
-    {1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,1},
-    {1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,0,1,1},
-    {1,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,1},
-    {1,0,1,1,1,0,1,1,1,0,1,1,1,0,1,1,1,0,1,1},
-    {1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,1},
-    {1,1,1,0,1,1,1,0,1,1,1,0,1,1,1,0,1,1,0,1},
-    {1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,1},
-    {1,0,1,1,1,0,1,1,1,1,1,0,1,1,1,0,1,1,0,1},
-    {1,0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,1,1},
-    {1,0,1,0,1,1,1,0,1,0,1,1,1,0,1,0,1,1,1,1},
-    {1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,1},
-    {1,1,1,0,1,0,1,1,1,0,1,0,1,1,1,0,1,0,1,1},
-    {1,0,0,0,0,0,1,0,0,0,0,0,1,0,0,0,0,0,0,1},
-    {1,0,1,1,1,0,1,1,1,0,1,1,1,0,1,1,1,0,1,1},
-    {1,0,1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,1},
-    {1,0,1,0,1,1,1,0,1,1,1,0,1,1,1,0,1,1,0,1},
-    {1,0,0,0,1,0,0,0,1,0,0,0,1,0,0,0,1,1,0,1},
-    {1,1,1,0,1,1,0,0,0,1,1,0,0,0,1,0,0,0,0,1},
-    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
+    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1},
+    {1,0,0,0,1,0,0,0,1,0,0,0,1,0,1},
+    {1,0,1,0,1,0,1,0,1,0,1,0,1,0,1},
+    {1,0,1,0,0,0,1,0,0,0,1,0,0,0,1},
+    {1,0,1,1,1,0,1,1,1,0,1,1,1,0,1},
+    {1,0,0,0,1,0,0,0,1,0,0,0,1,0,1},
+    {1,1,1,0,1,1,1,0,1,1,1,0,1,0,1},
+    {1,0,0,0,0,0,1,0,0,0,0,0,1,0,1},
+    {1,0,1,1,1,0,1,1,1,1,1,0,1,0,1},
+    {1,0,1,0,0,0,0,0,1,0,0,0,0,0,1},
+    {1,0,1,0,1,1,1,0,1,0,1,1,1,0,1},
+    {1,0,0,0,1,0,0,0,1,0,0,0,1,0,1},
+    {1,1,1,0,1,0,1,1,1,0,1,0,1,0,1},
+    {1,0,0,0,0,0,1,0,0,0,0,0,0,0,1},
+    {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1}
 };
 
 // Posisi spawn & exit di grid
 int spawnRow = 1, spawnCol = 1;
-const int EXIT_ROW  = 18, EXIT_COL  = 18;
+const int EXIT_ROW  = 13, EXIT_COL  = 13;
 
 // ============================================================
 //  KONFIGURASI GAME
 // ============================================================
+const float FIRST_PERSON_FOV   = 54.0f;
+const float FIRST_PERSON_FAR   = 38.0f;
 const float MEMORIZE_DURATION  = 7.0f;
 const float GAME_DURATION      = 180.0f;
 const int   FLASHLIGHT_USES    = 3;
@@ -416,12 +413,12 @@ void drawCeiling() {
 // ============================================================
 //  RENDER — MARKER EXIT (kotak hijau di lantai)
 // ============================================================
-void drawExit() {
+void drawExit(bool overlay = false) {
     float x0 = EXIT_COL * CELL + 0.2f;
     float x1 = x0 + CELL - 0.4f;
     float z0 = EXIT_ROW * CELL + 0.2f;
     float z1 = z0 + CELL - 0.4f;
-    float y  = 0.02f;
+    float y  = overlay ? (W_HEIGHT + 0.05f) : 0.02f;
 
     GLfloat emis[] = {0.0f, 0.8f, 0.3f, 1.0f};
     glMaterialfv(GL_FRONT, GL_EMISSION, emis);
@@ -468,18 +465,78 @@ void drawSpawn() {
 // ============================================================
 //  RENDER — MARKER KODE
 // ============================================================
-void drawCodeSpots() {
+void drawKeyOrb(int colorIndex, float x, float z) {
+    float r = COLOR_RGB[colorIndex][0];
+    float g = COLOR_RGB[colorIndex][1];
+    float b = COLOR_RGB[colorIndex][2];
+    float t = glutGet(GLUT_ELAPSED_TIME) / 1000.0f;
+    float bob = 0.12f * sinf(t * 2.2f + colorIndex * 1.7f);
+    float y = 0.55f + bob;
+
+    GLfloat emis[] = {r * 0.7f, g * 0.7f, b * 0.7f, 1.0f};
+    glMaterialfv(GL_FRONT, GL_EMISSION, emis);
+    glColor3f(r, g, b);
+
+    glPushMatrix();
+        glTranslatef(x, y, z);
+        glutSolidSphere(0.20f, 18, 18);
+    glPopMatrix();
+
+    GLfloat zero[] = {0,0,0,1};
+    glMaterialfv(GL_FRONT, GL_EMISSION, zero);
+}
+
+void setupKeyLights() {
+    glDisable(GL_LIGHT1);
+    glDisable(GL_LIGHT2);
+    glDisable(GL_LIGHT3);
+
+    if (viewMode != 0) return;
+
     for (int i = 0; i < CODE_COUNT; i++) {
         if (codeSpots[i].collected) continue;
-        float x0 = codeSpots[i].col * CELL + 0.25f;
-        float x1 = x0 + CELL - 0.5f;
-        float z0 = codeSpots[i].row * CELL + 0.25f;
-        float z1 = z0 + CELL - 0.5f;
-        float y  = 0.03f;
+
+        int lightId = GL_LIGHT1 + i;
+        float cx = (codeSpots[i].col + 0.5f) * CELL;
+        float cz = (codeSpots[i].row + 0.5f) * CELL;
+        float r = COLOR_RGB[i][0];
+        float g = COLOR_RGB[i][1];
+        float b = COLOR_RGB[i][2];
+
+        GLfloat pos[]  = {cx, 0.85f, cz, 1.0f};
+        GLfloat diff[] = {r * 0.9f, g * 0.9f, b * 0.9f, 1.0f};
+        GLfloat spec[] = {r * 0.35f, g * 0.35f, b * 0.35f, 1.0f};
+
+        glEnable(lightId);
+        glLightfv(lightId, GL_POSITION, pos);
+        glLightfv(lightId, GL_DIFFUSE,  diff);
+        glLightfv(lightId, GL_SPECULAR, spec);
+        glLightf(lightId, GL_CONSTANT_ATTENUATION,  1.0f);
+        glLightf(lightId, GL_LINEAR_ATTENUATION,    0.75f);
+        glLightf(lightId, GL_QUADRATIC_ATTENUATION, 0.6f);
+    }
+}
+
+void drawCodeSpots(bool overlay = false) {
+    for (int i = 0; i < CODE_COUNT; i++) {
+        if (codeSpots[i].collected) continue;
+        float cx = (codeSpots[i].col + 0.5f) * CELL;
+        float cz = (codeSpots[i].row + 0.5f) * CELL;
 
         float r = COLOR_RGB[i][0];
         float g = COLOR_RGB[i][1];
         float b = COLOR_RGB[i][2];
+
+        if (!overlay) {
+            drawKeyOrb(i, cx, cz);
+            continue;
+        }
+
+        float x0 = codeSpots[i].col * CELL + 0.25f;
+        float x1 = x0 + CELL - 0.5f;
+        float z0 = codeSpots[i].row * CELL + 0.25f;
+        float z1 = z0 + CELL - 0.5f;
+        float y  = W_HEIGHT + 0.06f;
 
         GLfloat emis[] = {r * 0.6f, g * 0.6f, b * 0.6f, 1.0f};
         glMaterialfv(GL_FRONT, GL_EMISSION, emis);
@@ -513,8 +570,8 @@ void drawMaze() {
     drawCeiling();
     drawExit();
     drawSpawn();
-    if (viewMode == 1)
-        drawCodeSpots();
+    if (viewMode == 0)
+        drawCodeSpots(false);
 }
 
 // ============================================================
@@ -527,28 +584,30 @@ void setupLighting() {
     glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
     glShadeModel(GL_SMOOTH);
 
-    GLfloat ambGlobal[] = {0.008f, 0.007f, 0.006f, 1.0f};
+    GLfloat ambGlobal[] = {0.020f, 0.018f, 0.016f, 1.0f};
     glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambGlobal);
 
     GLfloat lightPos[]  = {cam.x, cam.y, cam.z, 1.0f};
-    GLfloat lightDiff[] = {flashlightActive ? 0.95f : 0.45f,
-                           flashlightActive ? 0.75f : 0.38f,
-                           flashlightActive ? 0.50f : 0.25f,
+    GLfloat lightDiff[] = {flashlightActive ? 1.00f : 0.74f,
+                           flashlightActive ? 0.86f : 0.64f,
+                           flashlightActive ? 0.58f : 0.44f,
                            1.0f};
-    GLfloat lightSpec[] = {0.45f, 0.4f, 0.3f, 1.0f};
+    GLfloat lightSpec[] = {0.58f, 0.52f, 0.38f, 1.0f};
 
     glLightfv(GL_LIGHT0, GL_POSITION, lightPos);
     glLightfv(GL_LIGHT0, GL_DIFFUSE,  lightDiff);
     glLightfv(GL_LIGHT0, GL_SPECULAR, lightSpec);
 
-    float range = flashlightActive ? 3.8f : 1.8f;
+    setupKeyLights();
+
+    float range = flashlightActive ? 4.0f : 3.0f;
     glLightf(GL_LIGHT0, GL_CONSTANT_ATTENUATION,  1.0f);
-    glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION,    1.8f / range);
-    glLightf(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, 0.6f / (range * range));
+    glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION,    1.05f / range);
+    glLightf(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, 0.30f / (range * range));
 
     glEnable(GL_FOG);
     glFogi(GL_FOG_MODE, GL_EXP2);
-    glFogf(GL_FOG_DENSITY, flashlightActive ? 0.12f : 0.22f);
+    glFogf(GL_FOG_DENSITY, flashlightActive ? 0.08f : 0.12f);
     GLfloat fogCol[] = {0.02f, 0.02f, 0.02f, 1.0f};
     glFogfv(GL_FOG_COLOR, fogCol);
 }
@@ -610,11 +669,11 @@ void drawHUD() {
         drawText(20, WIN_H - 94, buf, GLUT_BITMAP_HELVETICA_12);
     }
 
-    // Status kode
+    // Status kunci
     int y = WIN_H - 118;
     for (int i = 0; i < CODE_COUNT; i++) {
         glColor3f(COLOR_RGB[i][0], COLOR_RGB[i][1], COLOR_RGB[i][2]);
-        sprintf(buf, "%s: %s", COLOR_NAMES[i], codeCollected[i] ? "OK" : "--");
+        sprintf(buf, "Kunci %s: %s", COLOR_NAMES[i], codeCollected[i] ? "OK" : "--");
         drawText(20, y, buf, GLUT_BITMAP_HELVETICA_12);
         y -= 16;
     }
@@ -630,7 +689,7 @@ void drawHUD() {
         int codeIdx = codeIndexAtPlayer();
         if (codeIdx != -1) {
             glColor3f(1.0f, 1.0f, 1.0f);
-            sprintf(buf, "Tekan E untuk ambil kode %s", COLOR_NAMES[codeIdx]);
+            sprintf(buf, "Tekan E untuk ambil kunci %s", COLOR_NAMES[codeIdx]);
             drawText(WIN_W / 2 - 160, 64, buf, GLUT_BITMAP_HELVETICA_12);
         }
         if (isPlayerAt(EXIT_ROW, EXIT_COL)) {
@@ -638,7 +697,7 @@ void drawHUD() {
             if (allCodesCollected()) {
                 drawText(WIN_W / 2 - 150, 80, "Tekan ENTER untuk input kode", GLUT_BITMAP_HELVETICA_12);
             } else {
-                drawText(WIN_W / 2 - 150, 80, "Exit terkunci: cari 3 kode", GLUT_BITMAP_HELVETICA_12);
+                drawText(WIN_W / 2 - 150, 80, "Exit terkunci: cari 3 kunci", GLUT_BITMAP_HELVETICA_12);
             }
         }
     }
@@ -701,7 +760,7 @@ void display() {
     glLoadIdentity();
 
     if (viewMode == 0) {
-        gluPerspective(75.0, (double)WIN_W / WIN_H, 0.1, 80.0);
+        gluPerspective(FIRST_PERSON_FOV, (double)WIN_W / WIN_H, 0.1, FIRST_PERSON_FAR);
 
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
@@ -733,8 +792,8 @@ void display() {
         glEnable(GL_LIGHTING);
         glEnable(GL_LIGHT0);
         GLfloat topPos[]  = {mazeW/2, 8.0f, mazeD/2, 1.0f};
-        GLfloat topDiff[] = {0.9f, 0.85f, 0.75f, 1.0f};
-        GLfloat topAmb[]  = {0.4f, 0.38f, 0.33f, 1.0f};
+        GLfloat topDiff[] = {1.0f, 0.95f, 0.85f, 1.0f};
+        GLfloat topAmb[]  = {0.48f, 0.44f, 0.38f, 1.0f};
         glLightfv(GL_LIGHT0, GL_POSITION, topPos);
         glLightfv(GL_LIGHT0, GL_DIFFUSE,  topDiff);
         glLightModelfv(GL_LIGHT_MODEL_AMBIENT, topAmb);
@@ -744,6 +803,17 @@ void display() {
     }
 
     drawMaze();
+
+    if (viewMode == 1) {
+        glDisable(GL_LIGHTING);
+        glDisable(GL_DEPTH_TEST);
+
+        drawExit(true);
+        drawCodeSpots(true);
+
+        glEnable(GL_DEPTH_TEST);
+        glEnable(GL_LIGHTING);
+    }
 
     // Render posisi player di top-down
     if (viewMode == 1) {
@@ -886,7 +956,7 @@ void keyDown(unsigned char k, int x, int y) {
                 codeSpots[idx].collected = true;
                 codeCollected[codeSpots[idx].color] = true;
                 char msg[64];
-                sprintf(msg, "Kode %s ditemukan: %d", COLOR_NAMES[codeSpots[idx].color], codeSpots[idx].digit);
+                sprintf(msg, "Kunci %s ditemukan: %d", COLOR_NAMES[codeSpots[idx].color], codeSpots[idx].digit);
                 setStatus(msg, 3.0f);
             }
         }
@@ -958,7 +1028,7 @@ void initGL() {
     printf("  WASD  : Gerak & Putar                     \n");
     printf("  F     : Flashlight (3x, 5 detik)          \n");
     printf("  M     : Buka peta (3x, 4 detik)           \n");
-    printf("  E     : Ambil kode                        \n");
+    printf("  E     : Ambil kunci                       \n");
     printf("  ENTER : Input kode di exit               \n");
     printf("  ESC   : Keluar                           \n");
     printf("===========================================\n");

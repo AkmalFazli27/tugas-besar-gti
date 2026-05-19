@@ -55,6 +55,28 @@ int maze[ROWS][COLS] = {
 const int SPAWN_ROW = 1, SPAWN_COL = 1;
 const int EXIT_ROW  = 11, EXIT_COL  = 11;
 
+// Kunci untuk membuka exit
+struct KeyItem {
+    int row;
+    int col;
+    GLfloat color[4];
+    bool collected;
+};
+
+const int KEY_COUNT = 3;
+KeyItem keyItems[KEY_COUNT] = {
+    {1, 11, {1.0f, 0.82f, 0.20f, 1.0f}, false},
+    {5, 7,  {0.25f, 0.85f, 1.0f, 1.0f}, false},
+    {9, 9,  {1.0f, 0.35f, 0.85f, 1.0f}, false}
+};
+
+bool allKeysCollected() {
+    for (int i = 0; i < KEY_COUNT; i++) {
+        if (!keyItems[i].collected) return false;
+    }
+    return true;
+}
+
 // ============================================================
 //  KAMERA FIRST-PERSON
 // ============================================================
@@ -86,6 +108,96 @@ bool isWalkable(float wx, float wz) {
     int c = (int)(wx / CELL);
     if (r < 0 || r >= ROWS || c < 0 || c >= COLS) return false;
     return maze[r][c] == 0;
+}
+
+void drawKeyMarker(const KeyItem& key, bool overlay) {
+    float wx = (key.col + 0.5f) * CELL;
+    float wz = (key.row + 0.5f) * CELL;
+    float y  = overlay ? (W_HEIGHT + 0.08f) : 0.18f;
+    float size = key.collected ? 0.14f : 0.22f;
+    GLfloat color[] = {
+        key.collected ? 0.55f : key.color[0],
+        key.collected ? 0.55f : key.color[1],
+        key.collected ? 0.55f : key.color[2],
+        1.0f
+    };
+    GLfloat emis[] = {
+        key.collected ? 0.05f : key.color[0],
+        key.collected ? 0.05f : key.color[1],
+        key.collected ? 0.05f : key.color[2],
+        1.0f
+    };
+
+    glMaterialfv(GL_FRONT, GL_EMISSION, emis);
+    glColor3fv(color);
+
+    glPushMatrix();
+        glTranslatef(wx, y, wz);
+
+        glBegin(GL_TRIANGLE_FAN);
+            glVertex3f(0.0f, 0.0f, 0.0f);
+            for (int i = 0; i <= 20; i++) {
+                float a = toRad(i * (360.0f / 20.0f));
+                glVertex3f(cosf(a) * size, 0.0f, sinf(a) * size);
+            }
+        glEnd();
+
+        glLineWidth(2.0f);
+        glBegin(GL_LINES);
+            glVertex3f(size * 0.4f, 0.0f, 0.0f);
+            glVertex3f(size * 0.95f, 0.0f, 0.0f);
+        glEnd();
+        glLineWidth(1.0f);
+    glPopMatrix();
+
+    GLfloat zero[] = {0,0,0,1};
+    glMaterialfv(GL_FRONT, GL_EMISSION, zero);
+}
+
+void drawExitMarker(bool overlay) {
+    float x0 = EXIT_COL * CELL + 0.16f;
+    float x1 = x0 + CELL - 0.32f;
+    float z0 = EXIT_ROW * CELL + 0.16f;
+    float z1 = z0 + CELL - 0.32f;
+    float y  = overlay ? (W_HEIGHT + 0.05f) : 0.02f;
+    bool unlocked = allKeysCollected();
+
+    GLfloat emis[] = {
+        unlocked ? 0.0f : 0.55f,
+        unlocked ? 0.85f : 0.12f,
+        unlocked ? 0.35f : 0.05f,
+        1.0f
+    };
+    glMaterialfv(GL_FRONT, GL_EMISSION, emis);
+    glColor3f(unlocked ? 0.0f : 0.7f, unlocked ? 1.0f : 0.2f, unlocked ? 0.45f : 0.1f);
+
+    glBegin(GL_QUADS);
+        glNormal3f(0, 1, 0);
+        glVertex3f(x0, y, z0);
+        glVertex3f(x1, y, z0);
+        glVertex3f(x1, y, z1);
+        glVertex3f(x0, y, z1);
+    glEnd();
+
+    GLfloat zero[] = {0,0,0,1};
+    glMaterialfv(GL_FRONT, GL_EMISSION, zero);
+}
+
+void collectKeysIfNear() {
+    for (int i = 0; i < KEY_COUNT; i++) {
+        if (keyItems[i].collected) continue;
+
+        float keyX = (keyItems[i].col + 0.5f) * CELL;
+        float keyZ = (keyItems[i].row + 0.5f) * CELL;
+        float dx = cam.x - keyX;
+        float dz = cam.z - keyZ;
+        float dist2 = dx * dx + dz * dz;
+
+        if (dist2 < 0.45f * 0.45f) {
+            keyItems[i].collected = true;
+            printf("[KEY] Terkumpul %d/%d\n", i + 1, KEY_COUNT);
+        }
+    }
 }
 
 // ============================================================
@@ -179,27 +291,7 @@ void drawCeiling() {
 //  RENDER — MARKER EXIT (kotak hijau di lantai)
 // ============================================================
 void drawExit() {
-    float x0 = EXIT_COL * CELL + 0.2f;
-    float x1 = x0 + CELL - 0.4f;
-    float z0 = EXIT_ROW * CELL + 0.2f;
-    float z1 = z0 + CELL - 0.4f;
-    float y  = 0.02f; // sedikit di atas lantai
-
-    // Warna: hijau terang bercahaya
-    GLfloat emis[] = {0.0f, 0.8f, 0.3f, 1.0f};
-    glMaterialfv(GL_FRONT, GL_EMISSION, emis);
-    glColor3f(0.0f, 1.0f, 0.4f);
-
-    glBegin(GL_QUADS);
-        glNormal3f(0, 1, 0);
-        glVertex3f(x0, y, z0);
-        glVertex3f(x1, y, z0);
-        glVertex3f(x1, y, z1);
-        glVertex3f(x0, y, z1);
-    glEnd();
-
-    GLfloat zero[] = {0,0,0,1};
-    glMaterialfv(GL_FRONT, GL_EMISSION, zero);
+    drawExitMarker(false);
 }
 
 // ============================================================
@@ -244,6 +336,9 @@ void drawMaze() {
     drawCeiling();
     drawExit();
     drawSpawn();
+
+    for (int i = 0; i < KEY_COUNT; i++)
+        drawKeyMarker(keyItems[i], false);
 }
 
 // ============================================================
@@ -257,13 +352,13 @@ void setupLighting() {
     glShadeModel(GL_SMOOTH);
 
     // Ambient global — redup seperti ruangan gelap
-    GLfloat ambGlobal[] = {0.05f, 0.04f, 0.03f, 1.0f};
+    GLfloat ambGlobal[] = {0.07f, 0.06f, 0.05f, 1.0f};
     glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambGlobal);
 
     // Cahaya utama mengikuti posisi kamera (seperti obor/lilin)
     GLfloat lightPos[]  = {cam.x, cam.y, cam.z, 1.0f};
-    GLfloat lightDiff[] = {1.0f, 0.85f, 0.55f, 1.0f};  // kuning hangat
-    GLfloat lightSpec[] = {0.4f, 0.35f, 0.2f,  1.0f};
+    GLfloat lightDiff[] = {1.0f, 0.93f, 0.68f, 1.0f};  // kuning hangat
+    GLfloat lightSpec[] = {0.55f, 0.50f, 0.30f, 1.0f};
 
     glLightfv(GL_LIGHT0, GL_POSITION, lightPos);
     glLightfv(GL_LIGHT0, GL_DIFFUSE,  lightDiff);
@@ -271,14 +366,14 @@ void setupLighting() {
 
     // Attenuation: cahaya meredup di kejauhan
     glLightf(GL_LIGHT0, GL_CONSTANT_ATTENUATION,  1.0f);
-    glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION,    0.35f);
-    glLightf(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, 0.05f);
+    glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION,    0.26f);
+    glLightf(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, 0.03f);
 
     // Fog tipis untuk kedalaman
     glEnable(GL_FOG);
     glFogi(GL_FOG_MODE, GL_EXP2);
-    glFogf(GL_FOG_DENSITY, 0.06f);
-    GLfloat fogCol[] = {0.05f, 0.04f, 0.03f, 1.0f};
+    glFogf(GL_FOG_DENSITY, 0.045f);
+    GLfloat fogCol[] = {0.07f, 0.06f, 0.05f, 1.0f};
     glFogfv(GL_FOG_COLOR, fogCol);
 }
 
@@ -348,6 +443,25 @@ void drawHUD() {
     for (char* c = buf; *c; c++)
         glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, *c);
 
+    // Status kunci
+    char keyBuf[64];
+    int collectedCount = 0;
+    for (int i = 0; i < KEY_COUNT; i++)
+        if (keyItems[i].collected) collectedCount++;
+    sprintf(keyBuf, "Keys: %d/%d", collectedCount, KEY_COUNT);
+    glColor3f(0.85f, 0.85f, 0.85f);
+    glRasterPos2i(WIN_W - 170, 34);
+    for (char* c = keyBuf; *c; c++)
+        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, *c);
+
+    if (viewMode == 1) {
+        glColor3f(0.85f, 0.85f, 0.85f);
+        glRasterPos2i(20, 34);
+        const char* mapHint = "Map terbuka: kunci dan exit ditandai";
+        for (const char* c = mapHint; *c; c++)
+            glutBitmapCharacter(GLUT_BITMAP_HELVETICA_12, *c);
+    }
+
     glEnable(GL_FOG);
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_LIGHTING);
@@ -368,7 +482,7 @@ void display() {
 
     if (viewMode == 0) {
         // ---- FIRST-PERSON (Perspective) ----
-        gluPerspective(75.0, (double)WIN_W / WIN_H, 0.1, 80.0);
+        gluPerspective(62.0, (double)WIN_W / WIN_H, 0.1, 55.0);
 
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
@@ -407,8 +521,8 @@ void display() {
         glEnable(GL_LIGHTING);
         glEnable(GL_LIGHT0);
         GLfloat topPos[]  = {mazeW/2, 8.0f, mazeD/2, 1.0f};
-        GLfloat topDiff[] = {0.9f, 0.85f, 0.75f, 1.0f};
-        GLfloat topAmb[]  = {0.35f, 0.32f, 0.28f, 1.0f};
+        GLfloat topDiff[] = {1.0f, 0.95f, 0.85f, 1.0f};
+        GLfloat topAmb[]  = {0.45f, 0.40f, 0.34f, 1.0f};
         glLightfv(GL_LIGHT0, GL_POSITION, topPos);
         glLightfv(GL_LIGHT0, GL_DIFFUSE,  topDiff);
         glLightModelfv(GL_LIGHT_MODEL_AMBIENT, topAmb);
@@ -418,6 +532,18 @@ void display() {
     }
 
     drawMaze();
+
+    if (viewMode == 1) {
+        glDisable(GL_LIGHTING);
+        glDisable(GL_DEPTH_TEST);
+
+        drawExitMarker(true);
+        for (int i = 0; i < KEY_COUNT; i++)
+            drawKeyMarker(keyItems[i], true);
+
+        glEnable(GL_DEPTH_TEST);
+        glEnable(GL_LIGHTING);
+    }
 
     // Render posisi player sebagai titik kecil di top-down
     if (viewMode == 1) {
@@ -484,6 +610,19 @@ void update(int v) {
             cam.x = nx;
         if (isWalkable(cam.x, nz + m) && isWalkable(cam.x, nz - m))
             cam.z = nz;
+    }
+
+    collectKeysIfNear();
+
+    if (allKeysCollected()) {
+        float exitX = (EXIT_COL + 0.5f) * CELL;
+        float exitZ = (EXIT_ROW + 0.5f) * CELL;
+        float dx = cam.x - exitX;
+        float dz = cam.z - exitZ;
+        if (dx * dx + dz * dz < 0.55f * 0.55f) {
+            printf("[EXIT] Pintu keluar terbuka. Level selesai.\n");
+            exit(0);
+        }
     }
 
     glutPostRedisplay();

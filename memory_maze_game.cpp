@@ -163,15 +163,20 @@ int viewMode = 0;
 // ============================================================
 //  UTILITY
 // ============================================================
+// Konversi derajat ke radian.
 float toRad(float deg) { return deg * 3.14159265f / 180.0f; }
 
+// Ambil integer acak dalam rentang inklusif.
 int randRange(int minVal, int maxVal) {
     return minVal + (rand() % (maxVal - minVal + 1));
 }
 
+// Posisi player pada grid (row).
 int playerRow() { return (int)(cam.z / CELL); }
+// Posisi player pada grid (col).
 int playerCol() { return (int)(cam.x / CELL); }
 
+// Cek apakah posisi world bisa dilalui.
 bool isWalkable(float wx, float wz) {
     int r = (int)(wz / CELL);
     int c = (int)(wx / CELL);
@@ -179,32 +184,38 @@ bool isWalkable(float wx, float wz) {
     return maze[r][c] == 0;
 }
 
+// Cek apakah sel grid bisa dilalui.
 bool isCellWalkable(int r, int c) {
     if (r < 0 || r >= ROWS || c < 0 || c >= COLS) return false;
     return maze[r][c] == 0;
 }
 
+// Cek apakah player berada pada sel tertentu.
 bool isPlayerAt(int r, int c) {
     return playerRow() == r && playerCol() == c;
 }
 
+// Cek apakah semua kunci sudah dikumpulkan.
 bool allCodesCollected() {
     for (int i = 0; i < CODE_COUNT; i++)
         if (!codeCollected[i]) return false;
     return true;
 }
 
+// Set pesan status HUD dengan durasi tampil.
 void setStatus(const char* msg, float duration) {
     std::strncpy(statusMsg, msg, sizeof(statusMsg) - 1);
     statusMsg[sizeof(statusMsg) - 1] = '\0';
     statusMsgTimer = duration;
 }
 
+// Reset input kode yang sedang diketik.
 void resetInputCodes() {
     for (int i = 0; i < CODE_COUNT; i++) enteredCodes[i] = -1;
     inputIndex = 0;
 }
 
+// Hitung sel yang reachable dari exit.
 void computeReachableFromExit() {
     for (int r = 0; r < ROWS; r++)
         for (int c = 0; c < COLS; c++)
@@ -233,6 +244,7 @@ void computeReachableFromExit() {
     }
 }
 
+// Pilih spawn acak dari sel yang bisa mencapai exit.
 void placeRandomSpawn() {
     int candidates[ROWS * COLS][2];
     int count = 0;
@@ -257,6 +269,7 @@ void placeRandomSpawn() {
     cam.angle = 0.0f;
 }
 
+// Cek apakah sel sudah dipakai untuk kunci/kode.
 bool isCellUsedForCode(int r, int c, bool used[ROWS][COLS]) {
     if (!isCellWalkable(r, c)) return true;
     if (r == EXIT_ROW && c == EXIT_COL) return true;
@@ -265,6 +278,7 @@ bool isCellUsedForCode(int r, int c, bool used[ROWS][COLS]) {
     return false;
 }
 
+// Tempatkan kunci/kode secara acak di maze.
 void placeCodes() {
     bool used[ROWS][COLS] = {};
     used[spawnRow][spawnCol] = true;
@@ -302,6 +316,7 @@ void placeCodes() {
     }
 }
 
+// Reset state game dan semua timer.
 void resetGame() {
     if (maze[EXIT_ROW][EXIT_COL] == 1)
         maze[EXIT_ROW][EXIT_COL] = 0;
@@ -323,6 +338,7 @@ void resetGame() {
     setStatus("Hafalkan peta dan lokasi kode", 2.5f);
 }
 
+// Cari indeks kunci yang sedang diinjak player.
 int codeIndexAtPlayer() {
     int pr = playerRow();
     int pc = playerCol();
@@ -336,6 +352,7 @@ int codeIndexAtPlayer() {
 // ============================================================
 //  RENDER — SATU DINDING
 // ============================================================
+// Render satu dinding cell.
 void drawWall(int col, int row) {
     float x0 = col * CELL,  x1 = x0 + CELL;
     float z0 = row * CELL,  z1 = z0 + CELL;
@@ -377,6 +394,7 @@ void drawWall(int col, int row) {
 // ============================================================
 //  RENDER — LANTAI
 // ============================================================
+// Render lantai maze.
 void drawFloor() {
     float tw = COLS * CELL;
     float td = ROWS * CELL;
@@ -395,6 +413,7 @@ void drawFloor() {
 // ============================================================
 //  RENDER — LANGIT-LANGIT
 // ============================================================
+// Render langit-langit maze.
 void drawCeiling() {
     float tw = COLS * CELL;
     float td = ROWS * CELL;
@@ -413,6 +432,7 @@ void drawCeiling() {
 // ============================================================
 //  RENDER — MARKER EXIT (kotak hijau di lantai)
 // ============================================================
+// Render penanda exit di lantai atau overlay map.
 void drawExit(bool overlay = false) {
     float x0 = EXIT_COL * CELL + 0.2f;
     float x1 = x0 + CELL - 0.4f;
@@ -439,6 +459,7 @@ void drawExit(bool overlay = false) {
 // ============================================================
 //  RENDER — MARKER SPAWN (kotak biru di lantai)
 // ============================================================
+// Render penanda spawn di lantai.
 void drawSpawn() {
     float x0 = spawnCol * CELL + 0.2f;
     float x1 = x0 + CELL - 0.4f;
@@ -465,6 +486,7 @@ void drawSpawn() {
 // ============================================================
 //  RENDER — MARKER KODE
 // ============================================================
+// Render orb kunci melayang di world-space.
 void drawKeyOrb(int colorIndex, float x, float z) {
     float r = COLOR_RGB[colorIndex][0];
     float g = COLOR_RGB[colorIndex][1];
@@ -486,6 +508,7 @@ void drawKeyOrb(int colorIndex, float x, float z) {
     glMaterialfv(GL_FRONT, GL_EMISSION, zero);
 }
 
+// Aktifkan lampu point untuk orb kunci.
 void setupKeyLights() {
     glDisable(GL_LIGHT1);
     glDisable(GL_LIGHT2);
@@ -517,6 +540,7 @@ void setupKeyLights() {
     }
 }
 
+// Render kunci di world-space atau marker overlay di map.
 void drawCodeSpots(bool overlay = false) {
     for (int i = 0; i < CODE_COUNT; i++) {
         if (codeSpots[i].collected) continue;
@@ -558,6 +582,7 @@ void drawCodeSpots(bool overlay = false) {
 // ============================================================
 //  RENDER — SELURUH MAZE
 // ============================================================
+// Render seluruh maze dan marker statis.
 void drawMaze() {
     glColor3f(0.14f, 0.12f, 0.10f);
 
@@ -577,6 +602,7 @@ void drawMaze() {
 // ============================================================
 //  SETUP PENCAHAYAAN
 // ============================================================
+// Setup pencahayaan dan fog scene.
 void setupLighting() {
     glEnable(GL_LIGHTING);
     glEnable(GL_LIGHT0);
@@ -615,12 +641,14 @@ void setupLighting() {
 // ============================================================
 //  RENDER — HUD
 // ============================================================
+// Render teks HUD.
 void drawText(int x, int y, const char* text, void* font) {
     glRasterPos2i(x, y);
     for (const char* c = text; *c; c++)
         glutBitmapCharacter(font, *c);
 }
 
+// Render HUD game.
 void drawHUD() {
     glMatrixMode(GL_PROJECTION);
     glPushMatrix(); glLoadIdentity();
@@ -750,6 +778,7 @@ void drawHUD() {
 // ============================================================
 //  GLUT — DISPLAY
 // ============================================================
+// Render frame utama.
 void display() {
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
@@ -851,6 +880,7 @@ void display() {
 // ============================================================
 //  GLUT — UPDATE (Timer ~60fps)
 // ============================================================
+// Update timer, input, dan state game.
 void update(int v) {
     static float lastT = 0;
     float t  = glutGet(GLUT_ELAPSED_TIME) / 1000.0f;
@@ -926,6 +956,7 @@ void update(int v) {
 // ============================================================
 //  GLUT — KEYBOARD
 // ============================================================
+// Handler input key down.
 void keyDown(unsigned char k, int x, int y) {
     keys[k] = true;
 
@@ -1001,11 +1032,13 @@ void keyDown(unsigned char k, int x, int y) {
     }
 }
 
+// Handler input key up.
 void keyUp(unsigned char k, int x, int y) { keys[k] = false; }
 
 // ============================================================
 //  GLUT — RESHAPE
 // ============================================================
+// Handler resize window.
 void reshape(int w, int h) {
     glViewport(0, 0, w, h);
 }
@@ -1013,6 +1046,7 @@ void reshape(int w, int h) {
 // ============================================================
 //  INISIALISASI OPENGL
 // ============================================================
+// Inisialisasi state OpenGL.
 void initGL() {
     glEnable(GL_DEPTH_TEST);
     glEnable(GL_NORMALIZE);
@@ -1037,6 +1071,7 @@ void initGL() {
 // ============================================================
 //  MAIN
 // ============================================================
+// Entry point program.
 int main(int argc, char** argv) {
     srand((unsigned)time(nullptr));
 

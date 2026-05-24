@@ -159,6 +159,15 @@ void setupLighting();
 void drawText(int x, int y, const char* text, void* font);
 void drawHUD();
 
+// HUD helper functions
+void drawFilledRect(float x, float y, float w, float h);
+void drawOutlinedRect(float x, float y, float w, float h, float thickness);
+void drawFilledCircle(float cx, float cy, float r, int segments);
+void drawOutlinedCircle(float cx, float cy, float r, int segments, float thickness);
+void drawProgressBar(float x, float y, float w, float h, float progress,
+                     float r, float g, float b, float bgR, float bgG, float bgB);
+void drawPanel(float x, float y, float w, float h, float alpha);
+
 // Entry
 void display();
 void update(int v);

@@ -3,8 +3,8 @@
 //  Tahap 1: Maze layout, dinding, lantai, kamera first-person
 //
 //  # Compile
-//  C:\msys64\mingw64\bin\g++.exe memory_maze.cpp -o memory_maze.exe -lfreeglut -lopengl32 -lglu32
-
+//  C:\msys64\mingw64\bin\g++.exe -std=c++17 -g src\maze_structure.cpp -o memory_maze.exe -lfreeglut -lopengl32 -lglu32
+//
 //  # Run (tambahkan PATH runtime freeglut)
 //  $env:Path = "C:\msys64\mingw64\bin;$env:Path"
 //  .\memory_maze.exe

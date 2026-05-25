@@ -376,6 +376,24 @@ void drawPanel(float x, float y, float w, float h, float alpha) {
     glDisable(GL_BLEND);
 }
 
+static int textWidth(void* font, const char* s) {
+    int width = 0;
+    const unsigned char* p = (const unsigned char*)s;
+    while (*p) {
+        width += glutBitmapWidth(font, *p);
+        ++p;
+    }
+    return width;
+}
+
+static int textWidth18(const char* s) {
+    return textWidth(GLUT_BITMAP_HELVETICA_18, s);
+}
+
+static int textWidth12(const char* s) {
+    return textWidth(GLUT_BITMAP_HELVETICA_12, s);
+}
+
 // ============================================================
 //  RENDER — HUD
 // ============================================================
@@ -398,6 +416,8 @@ void drawHUD() {
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
     char buf[256];
+    float topStripY = WIN_H - 56.0f;
+    float topStripH = 40.0f;
 
     // ============================================================
     //  STATE BANNER — Top center
@@ -422,10 +442,11 @@ void drawHUD() {
     }
 
     {
-        float sx = WIN_W / 2.0f - 130.0f;
-        float sy = WIN_H - 48.0f;
-        float sw = 260.0f;
-        float sh = 36.0f;
+        int textW = textWidth18(stateStr);
+        float sw = (float)(textW + 32);
+        float sx = WIN_W / 2.0f - sw / 2.0f;
+        float sy = topStripY;
+        float sh = topStripH;
 
         glColor4f(0.08f, 0.08f, 0.1f, 0.75f);
         drawFilledRect(sx, sy, sw, sh);
@@ -440,8 +461,8 @@ void drawHUD() {
         glEnd();
         glLineWidth(1.0f);
 
-        int textW = (int)strlen(stateStr) * 9;
-        drawText((int)(sx + sw / 2 - textW / 2), (int)(sy + 9), stateStr, GLUT_BITMAP_HELVETICA_18);
+        int textY = (int)(sy + (sh - 18.0f) / 2.0f + 2.0f);
+        drawText((int)(sx + (sw - textW) / 2.0f), textY, stateStr, GLUT_BITMAP_HELVETICA_18);
     }
 
     // ============================================================
@@ -453,9 +474,9 @@ void drawHUD() {
         float progress = curTime / maxTime;
 
         float barX = 20.0f;
-        float barY = WIN_H - 44.0f;
         float barW = 220.0f;
-        float barH = 28.0f;
+        float barH = 30.0f;
+        float barY = topStripY + (topStripH - barH) / 2.0f;
 
         // Background panel
         glColor4f(0.06f, 0.06f, 0.08f, 0.75f);
@@ -490,8 +511,10 @@ void drawHUD() {
         // Time text
         float timeVal = (gameState == STATE_MEMORIZE) ? memorizeTimeLeft : gameTimeLeft;
         sprintf(buf, gameState == STATE_MEMORIZE ? "%.0f" : "%.0f", timeVal);
-        glColor3f(0.9f, 0.9f, 0.9f);
-        drawText((int)(barX + barW + 8), (int)(barY + 6), buf, GLUT_BITMAP_HELVETICA_12);
+        int textW = textWidth18(buf);
+        int textY = (int)(barY + (barH - 18.0f) / 2.0f + 2.0f);
+        glColor3f(0.95f, 0.95f, 0.95f);
+        drawText((int)(barX + (barW - textW) / 2.0f), textY, buf, GLUT_BITMAP_HELVETICA_18);
     }
 
     // ============================================================
@@ -631,13 +654,12 @@ void drawHUD() {
     // ============================================================
     if (statusMsgTimer > 0.0f) {
         float alpha = (statusMsgTimer < 0.5f) ? (statusMsgTimer / 0.5f) : 0.85f;
-        int textLen = (int)strlen(statusMsg);
-        int msgW = textLen * 7 + 20;
-        if (msgW > 400) msgW = 400;
+        int textW = textWidth18(statusMsg);
+        int msgW = textW + 32;
 
-        float msgX = WIN_W / 2.0f - msgW / 2.0f + 5.0f;
+        float msgX = WIN_W / 2.0f - msgW / 2.0f;
         float msgY = 40.0f;
-        float msgH = 24.0f;
+        float msgH = 30.0f;
 
         glColor4f(0.0f, 0.0f, 0.0f, alpha * 0.7f);
         drawFilledRect(msgX, msgY, (float)msgW, msgH);
@@ -651,7 +673,8 @@ void drawHUD() {
         glEnd();
 
         glColor4f(1.0f, 0.85f, 0.4f, alpha);
-        drawText((int)(msgX + 10), (int)(msgY + 6), statusMsg, GLUT_BITMAP_HELVETICA_12);
+        int textY = (int)(msgY + (msgH - 18.0f) / 2.0f + 2.0f);
+        drawText((int)(msgX + (msgW - textW) / 2.0f), textY, statusMsg, GLUT_BITMAP_HELVETICA_18);
     }
 
     // ============================================================
@@ -661,10 +684,9 @@ void drawHUD() {
         int codeIdx = codeIndexAtPlayer();
         if (codeIdx != -1) {
             sprintf(buf, "Tekan [E] untuk ambil kunci %s", COLOR_NAMES[codeIdx]);
-            int textW = (int)strlen(buf) * 7;
-            float pw = (float)(textW + 24);
-            if (pw < 240.0f) pw = 240.0f;
-            float ph = 28.0f;
+            int textW = textWidth18(buf);
+            float pw = (float)(textW + 32);
+            float ph = 30.0f;
             float px = WIN_W / 2.0f - pw / 2.0f;
             float py = 80.0f;
 
@@ -679,15 +701,15 @@ void drawHUD() {
             glEnd();
 
             glColor3f(COLOR_RGB[codeIdx][0], COLOR_RGB[codeIdx][1], COLOR_RGB[codeIdx][2]);
-            drawText((int)(px + (pw - textW) / 2), (int)(py + 7), buf, GLUT_BITMAP_HELVETICA_12);
+            int textY = (int)(py + (ph - 18.0f) / 2.0f + 2.0f);
+            drawText((int)(px + (pw - textW) / 2), textY, buf, GLUT_BITMAP_HELVETICA_18);
         }
         if (isPlayerAt(EXIT_ROW, EXIT_COL)) {
             if (allCodesCollected()) {
                 const char* prompt = "Tekan [ENTER] input kode exit";
-                int textW = (int)strlen(prompt) * 7;
-                float pw = (float)(textW + 24);
-                if (pw < 240.0f) pw = 240.0f;
-                float ph = 28.0f;
+                int textW = textWidth18(prompt);
+                float pw = (float)(textW + 32);
+                float ph = 30.0f;
                 float px = WIN_W / 2.0f - pw / 2.0f;
                 float py = 112.0f;
                 glColor4f(0.0f, 0.0f, 0.0f, 0.65f);
@@ -699,17 +721,17 @@ void drawHUD() {
                     glVertex2f(px + pw, py + ph);
                     glVertex2f(px, py + ph);
                 glEnd();
-                drawText((int)(px + (pw - textW) / 2), (int)(py + 7), prompt, GLUT_BITMAP_HELVETICA_12);
+                int textY = (int)(py + (ph - 18.0f) / 2.0f + 2.0f);
+                drawText((int)(px + (pw - textW) / 2), textY, prompt, GLUT_BITMAP_HELVETICA_18);
             } else {
                 int collectedCount = 0;
                 for (int ci = 0; ci < CODE_COUNT; ci++) {
                     if (codeCollected[ci]) collectedCount++;
                 }
                 sprintf(buf, "Exit terkunci: cari %d kunci tersisa", CODE_COUNT - collectedCount);
-            int textW = (int)strlen(buf) * 7;
-                float pw = (float)(textW + 24);
-                if (pw < 240.0f) pw = 240.0f;
-                float ph = 28.0f;
+                int textW = textWidth18(buf);
+                float pw = (float)(textW + 32);
+                float ph = 30.0f;
                 float px = WIN_W / 2.0f - pw / 2.0f;
                 float py = 112.0f;
                 glColor4f(0.0f, 0.0f, 0.0f, 0.65f);
@@ -721,7 +743,8 @@ void drawHUD() {
                     glVertex2f(px + pw, py + ph);
                     glVertex2f(px, py + ph);
                 glEnd();
-                drawText((int)(px + (pw - textW) / 2), (int)(py + 7), buf, GLUT_BITMAP_HELVETICA_12);
+                int textY = (int)(py + (ph - 18.0f) / 2.0f + 2.0f);
+                drawText((int)(px + (pw - textW) / 2), textY, buf, GLUT_BITMAP_HELVETICA_18);
             }
         }
     }

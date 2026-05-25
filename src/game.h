@@ -52,6 +52,7 @@ struct Camera {
     float z     = 0.0f;
     float y     = 1.3f;
     float angle = 0.0f;
+    float pitch = 0.0f;
     float speed = 3.5f;
     float tSpeed= 80.0f;
 };
@@ -71,6 +72,15 @@ enum GameState {
 };
 
 extern GameState gameState;
+
+// ============================================================
+//  MOUSE LOOK
+// ============================================================
+extern float mouseSensitivity;
+extern bool  mouseWarping;
+extern bool  invertY;
+extern int   currentWinW;
+extern int   currentWinH;
 
 // ============================================================
 //  KODE WARNA
@@ -173,6 +183,7 @@ void display();
 void update(int v);
 void keyDown(unsigned char k, int x, int y);
 void keyUp(unsigned char k, int x, int y);
+void mouseMove(int x, int y);
 void reshape(int w, int h);
 void initGL();
 

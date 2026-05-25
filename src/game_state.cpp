@@ -47,6 +47,12 @@ Camera cam;
 bool keys[256] = {};
 GameState gameState = STATE_MEMORIZE;
 
+float mouseSensitivity = 0.25f;
+bool  mouseWarping = false;
+bool  invertY = false;
+int   currentWinW = WIN_W;
+int   currentWinH = WIN_H;
+
 CodeSpot codeSpots[CODE_COUNT];
 int codeDigits[CODE_COUNT] = {0};
 bool codeCollected[CODE_COUNT] = {false};

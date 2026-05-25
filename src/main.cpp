@@ -29,11 +29,13 @@ void display() {
         glMatrixMode(GL_MODELVIEW);
         glLoadIdentity();
 
-        float rad = toRad(cam.angle);
-        float lx  = cam.x + sinf(rad);
-        float lz  = cam.z + cosf(rad);
+        float radYaw = toRad(cam.angle);
+        float radPitch = toRad(cam.pitch);
+        float lx  = cam.x + sinf(radYaw) * cosf(radPitch);
+        float ly  = cam.y + sinf(radPitch);
+        float lz  = cam.z + cosf(radYaw) * cosf(radPitch);
         gluLookAt(cam.x, cam.y, cam.z,
-                  lx,    cam.y, lz,
+                  lx,    ly,    lz,
                   0, 1, 0);
 
         setupLighting();
@@ -169,16 +171,29 @@ void update(int v) {
 
         if (keys['w'] || keys['W']) { dx += sinf(rad)*spd; dz += cosf(rad)*spd; }
         if (keys['s'] || keys['S']) { dx -= sinf(rad)*spd; dz -= cosf(rad)*spd; }
-        if (keys['a'] || keys['A']) cam.angle += trn;
-        if (keys['d'] || keys['D']) cam.angle -= trn;
+        if (keys['a'] || keys['A']) {
+            dx += sinf(rad + 3.14159265f / 2.0f) * spd;
+            dz += cosf(rad + 3.14159265f / 2.0f) * spd;
+        }
+        if (keys['d'] || keys['D']) {
+            dx += sinf(rad - 3.14159265f / 2.0f) * spd;
+            dz += cosf(rad - 3.14159265f / 2.0f) * spd;
+        }
 
         float m  = 0.4f;
         float nx = cam.x + dx;
         float nz = cam.z + dz;
 
-        if (isWalkable(nx + m, cam.z) && isWalkable(nx - m, cam.z))
+        auto canMoveTo = [m](float x, float z) {
+            return isWalkable(x + m, z + m) &&
+                   isWalkable(x - m, z + m) &&
+                   isWalkable(x + m, z - m) &&
+                   isWalkable(x - m, z - m);
+        };
+
+        if (canMoveTo(nx, cam.z))
             cam.x = nx;
-        if (isWalkable(cam.x, nz + m) && isWalkable(cam.x, nz - m))
+        if (canMoveTo(cam.x, nz))
             cam.z = nz;
     }
 
@@ -267,10 +282,41 @@ void keyDown(unsigned char k, int x, int y) {
 void keyUp(unsigned char k, int x, int y) { keys[k] = false; }
 
 // ============================================================
+//  GLUT — MOUSE LOOK
+// ============================================================
+void mouseMove(int x, int y) {
+    if (mouseWarping) {
+        mouseWarping = false;
+        return;
+    }
+
+    int centerX = currentWinW / 2;
+    int centerY = currentWinH / 2;
+
+    int dx = x - centerX;
+    int dy = y - centerY;
+
+    if (dx == 0 && dy == 0) return;
+
+    cam.angle -= dx * mouseSensitivity;
+    cam.pitch += (invertY ? dy : -dy) * mouseSensitivity;
+
+    if (cam.pitch > 85.0f) cam.pitch = 85.0f;
+    if (cam.pitch < -85.0f) cam.pitch = -85.0f;
+
+    mouseWarping = true;
+    glutWarpPointer(centerX, centerY);
+}
+
+// ============================================================
 //  GLUT — RESHAPE
 // ============================================================
 void reshape(int w, int h) {
     glViewport(0, 0, w, h);
+    currentWinW = w;
+    currentWinH = h;
+    mouseWarping = true;
+    glutWarpPointer(currentWinW / 2, currentWinH / 2);
 }
 
 // ============================================================
@@ -282,6 +328,13 @@ void initGL() {
     glClearColor(0.02f, 0.02f, 0.03f, 1.0f);
 
     initTextures();
+
+    glutSetCursor(GLUT_CURSOR_NONE);
+    mouseWarping = false;
+    currentWinW = WIN_W;
+    currentWinH = WIN_H;
+    mouseWarping = true;
+    glutWarpPointer(currentWinW / 2, currentWinH / 2);
 
     GLfloat matSpec[] = {0.2f, 0.18f, 0.12f, 1.0f};
     glMaterialfv(GL_FRONT, GL_SPECULAR,  matSpec);
@@ -318,6 +371,7 @@ int main(int argc, char** argv) {
     glutReshapeFunc(reshape);
     glutKeyboardFunc(keyDown);
     glutKeyboardUpFunc(keyUp);
+    glutPassiveMotionFunc(mouseMove);
     glutTimerFunc(16, update, 0);
 
     glutMainLoop();

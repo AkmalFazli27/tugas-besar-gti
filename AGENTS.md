@@ -42,3 +42,11 @@ No package manager, no test framework.
 ## OpenCode Config Notes
 
 The `opencode.json` loads many generic agents/skills for web/TypeScript projects that do **not** apply here (TDD, Playwright E2E, frontend patterns, API design, etc.). The `instructions/INSTRUCTIONS.md` is similarly generic boilerplate. Ignore or remove them when working in this repo. The relevant subagents are `cpp-reviewer` and `cpp-build-resolver`.
+
+## Plan Mode Todo Rules
+
+- When operating in **plan mode**, always create or refresh a todo list using the `todowrite` tool.
+- Convert the plan into actionable checklist items (avoid vague goals).
+- When switching to **build mode**, update the same todo list and mark items `completed` as soon as the work for that item is done.
+- Complete and check off todo items **one by one** as each item finishes; do not wait until all work is done to update the checklist.
+- Keep the todo list current so the sidebar checklist reflects real progress.

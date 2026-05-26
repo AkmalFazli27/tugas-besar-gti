@@ -79,15 +79,22 @@ void drawCeiling() {
     float tw = COLS * CELL;
     float td = ROWS * CELL;
 
-    glColor3f(0.03f, 0.03f, 0.03f);
+    glEnable(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, texFloor);
+    glColor3f(1.0f, 1.0f, 1.0f);
+
+    float tu = 2.0f;
+    float tv = 2.0f;
 
     glBegin(GL_QUADS);
         glNormal3f(0, -1, 0);
-        glVertex3f(0,  W_HEIGHT, 0);
-        glVertex3f(0,  W_HEIGHT, td);
-        glVertex3f(tw, W_HEIGHT, td);
-        glVertex3f(tw, W_HEIGHT, 0);
+        glTexCoord2f(0.0f, 0.0f); glVertex3f(0,  W_HEIGHT, 0);
+        glTexCoord2f(tu,  0.0f);  glVertex3f(0,  W_HEIGHT, td);
+        glTexCoord2f(tu,  tv);   glVertex3f(tw, W_HEIGHT, td);
+        glTexCoord2f(0.0f, tv);   glVertex3f(tw, W_HEIGHT, 0);
     glEnd();
+
+    glDisable(GL_TEXTURE_2D);
 }
 
 // ============================================================
@@ -286,7 +293,7 @@ void setupLighting() {
     glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
     glShadeModel(GL_SMOOTH);
 
-    GLfloat ambGlobal[] = {0.055f, 0.050f, 0.045f, 1.0f};
+    GLfloat ambGlobal[] = {0.085f, 0.078f, 0.068f, 1.0f};
     glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambGlobal);
 
     GLfloat lightPos[]  = {cam.x, cam.y, cam.z, 1.0f};
@@ -302,14 +309,14 @@ void setupLighting() {
 
     setupKeyLights();
 
-    float range = flashlightActive ? 5.0f : 2.5f;
+    float range = flashlightActive ? 5.0f : 3.2f;
     glLightf(GL_LIGHT0, GL_CONSTANT_ATTENUATION,  1.0f);
     glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION,    1.05f / range);
     glLightf(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, 0.30f / (range * range));
 
     glEnable(GL_FOG);
     glFogi(GL_FOG_MODE, GL_EXP2);
-    glFogf(GL_FOG_DENSITY, flashlightActive ? 0.06f : 0.16f);
+    glFogf(GL_FOG_DENSITY, flashlightActive ? 0.06f : 0.12f);
     GLfloat fogCol[] = {0.02f, 0.02f, 0.02f, 1.0f};
     glFogfv(GL_FOG_COLOR, fogCol);
 }

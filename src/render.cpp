@@ -309,14 +309,14 @@ void setupLighting() {
 
     setupKeyLights();
 
-    float range = flashlightActive ? 5.0f : 3.2f;
+    float range = flashlightActive ? 5.0f : 2.0f;
     glLightf(GL_LIGHT0, GL_CONSTANT_ATTENUATION,  1.0f);
     glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION,    1.05f / range);
     glLightf(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, 0.30f / (range * range));
 
     glEnable(GL_FOG);
     glFogi(GL_FOG_MODE, GL_EXP2);
-    glFogf(GL_FOG_DENSITY, flashlightActive ? 0.06f : 0.12f);
+    glFogf(GL_FOG_DENSITY, flashlightActive ? 0.06f : 0.22f);
     GLfloat fogCol[] = {0.02f, 0.02f, 0.02f, 1.0f};
     glFogfv(GL_FOG_COLOR, fogCol);
 }

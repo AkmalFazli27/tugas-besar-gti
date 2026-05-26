@@ -47,7 +47,7 @@ Camera cam;
 bool keys[256] = {};
 GameState gameState = STATE_MEMORIZE;
 
-float mouseSensitivity = 0.25f;
+float mouseSensitivity = 0.12f;
 bool  mouseWarping = false;
 bool  invertY = false;
 int   currentWinW = WIN_W;

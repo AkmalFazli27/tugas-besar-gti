@@ -53,7 +53,7 @@ struct Camera {
     float y     = 1.3f;
     float angle = 0.0f;
     float pitch = 0.0f;
-    float speed = 3.5f;
+    float speed = 2.2f;
     float tSpeed= 80.0f;
 };
 

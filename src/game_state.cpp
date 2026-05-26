@@ -1,4 +1,6 @@
 #include "game.h"
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
 
 // ============================================================
 //  KONFIGURASI
@@ -98,36 +100,76 @@ void buildChecker(unsigned char* data, int size, int checkSize,
     }
 }
 
+static GLuint loadTexture2D(const char* path) {
+    int w = 0, h = 0, channels = 0;
+    stbi_set_flip_vertically_on_load(1);
+    unsigned char* data = stbi_load(path, &w, &h, &channels, 0);
+    if (!data || w <= 0 || h <= 0) {
+        printf("[Texture] load failed: %s (%s)\n", path, stbi_failure_reason());
+        fflush(stdout);
+        return 0;
+    }
+
+    printf("[Texture] loaded: %s (%dx%d, ch=%d)\n", path, w, h, channels);
+    fflush(stdout);
+
+    GLenum format = GL_RGB;
+    if (channels == 4) format = GL_RGBA;
+    else if (channels == 3) format = GL_RGB;
+    else if (channels == 1) format = GL_LUMINANCE;
+
+    GLuint tex = 0;
+    glGenTextures(1, &tex);
+    glBindTexture(GL_TEXTURE_2D, tex);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexImage2D(GL_TEXTURE_2D, 0, format, w, h, 0, format, GL_UNSIGNED_BYTE, data);
+
+    stbi_image_free(data);
+    return tex;
+}
+
 void initTextures() {
-    const int size = 64;
-    static unsigned char wallData[size * size * 3];
-    static unsigned char floorData[size * size * 3];
-
-    const unsigned char wallA[3]  = {90, 70, 55};
-    const unsigned char wallB[3]  = {60, 45, 35};
-    const unsigned char floorA[3] = {55, 45, 38};
-    const unsigned char floorB[3] = {30, 25, 20};
-
-    buildChecker(wallData, size, 8, wallA, wallB);
-    buildChecker(floorData, size, 6, floorA, floorB);
-
     glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
-    glGenTextures(1, &texWall);
-    glBindTexture(GL_TEXTURE_2D, texWall);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, size, size, 0, GL_RGB, GL_UNSIGNED_BYTE, wallData);
+    texWall = loadTexture2D("assets/textures/stone_wall.jpg");
+    texFloor = loadTexture2D("assets/textures/stone_floor.jpg");
 
-    glGenTextures(1, &texFloor);
-    glBindTexture(GL_TEXTURE_2D, texFloor);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, size, size, 0, GL_RGB, GL_UNSIGNED_BYTE, floorData);
+    if (texWall == 0 || texFloor == 0) {
+        const int size = 64;
+        static unsigned char wallData[size * size * 3];
+        static unsigned char floorData[size * size * 3];
+
+        const unsigned char wallA[3]  = {90, 70, 55};
+        const unsigned char wallB[3]  = {60, 45, 35};
+        const unsigned char floorA[3] = {55, 45, 38};
+        const unsigned char floorB[3] = {30, 25, 20};
+
+        buildChecker(wallData, size, 8, wallA, wallB);
+        buildChecker(floorData, size, 6, floorA, floorB);
+
+        if (texWall == 0) {
+            glGenTextures(1, &texWall);
+            glBindTexture(GL_TEXTURE_2D, texWall);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, size, size, 0, GL_RGB, GL_UNSIGNED_BYTE, wallData);
+        }
+
+        if (texFloor == 0) {
+            glGenTextures(1, &texFloor);
+            glBindTexture(GL_TEXTURE_2D, texFloor);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+            glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+            glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, size, size, 0, GL_RGB, GL_UNSIGNED_BYTE, floorData);
+        }
+    }
 }
 
 float toRad(float deg) { return deg * 3.14159265f / 180.0f; }

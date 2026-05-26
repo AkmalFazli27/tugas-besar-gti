@@ -10,38 +10,38 @@ void drawWall(int col, int row) {
 
     glEnable(GL_TEXTURE_2D);
     glBindTexture(GL_TEXTURE_2D, texWall);
-    glColor3f(1.0f, 1.0f, 1.0f);
+    glColor3f(0.9f, 0.9f, 0.9f);
 
     glBegin(GL_QUADS);
         glNormal3f(0, 0, 1);
         glTexCoord2f(0.0f, 0.0f); glVertex3f(x0, y0, z1);
-        glTexCoord2f(1.0f, 0.0f); glVertex3f(x1, y0, z1);
-        glTexCoord2f(1.0f, 1.0f); glVertex3f(x1, y1, z1);
-        glTexCoord2f(0.0f, 1.0f); glVertex3f(x0, y1, z1);
+        glTexCoord2f(2.0f, 0.0f); glVertex3f(x1, y0, z1);
+        glTexCoord2f(2.0f, 2.0f); glVertex3f(x1, y1, z1);
+        glTexCoord2f(0.0f, 2.0f); glVertex3f(x0, y1, z1);
 
         glNormal3f(0, 0, -1);
         glTexCoord2f(0.0f, 0.0f); glVertex3f(x1, y0, z0);
-        glTexCoord2f(1.0f, 0.0f); glVertex3f(x0, y0, z0);
-        glTexCoord2f(1.0f, 1.0f); glVertex3f(x0, y1, z0);
-        glTexCoord2f(0.0f, 1.0f); glVertex3f(x1, y1, z0);
+        glTexCoord2f(2.0f, 0.0f); glVertex3f(x0, y0, z0);
+        glTexCoord2f(2.0f, 2.0f); glVertex3f(x0, y1, z0);
+        glTexCoord2f(0.0f, 2.0f); glVertex3f(x1, y1, z0);
 
         glNormal3f(-1, 0, 0);
         glTexCoord2f(0.0f, 0.0f); glVertex3f(x0, y0, z0);
-        glTexCoord2f(1.0f, 0.0f); glVertex3f(x0, y0, z1);
-        glTexCoord2f(1.0f, 1.0f); glVertex3f(x0, y1, z1);
-        glTexCoord2f(0.0f, 1.0f); glVertex3f(x0, y1, z0);
+        glTexCoord2f(2.0f, 0.0f); glVertex3f(x0, y0, z1);
+        glTexCoord2f(2.0f, 2.0f); glVertex3f(x0, y1, z1);
+        glTexCoord2f(0.0f, 2.0f); glVertex3f(x0, y1, z0);
 
         glNormal3f(1, 0, 0);
         glTexCoord2f(0.0f, 0.0f); glVertex3f(x1, y0, z1);
-        glTexCoord2f(1.0f, 0.0f); glVertex3f(x1, y0, z0);
-        glTexCoord2f(1.0f, 1.0f); glVertex3f(x1, y1, z0);
-        glTexCoord2f(0.0f, 1.0f); glVertex3f(x1, y1, z1);
+        glTexCoord2f(2.0f, 0.0f); glVertex3f(x1, y0, z0);
+        glTexCoord2f(2.0f, 2.0f); glVertex3f(x1, y1, z0);
+        glTexCoord2f(0.0f, 2.0f); glVertex3f(x1, y1, z1);
 
         glNormal3f(0, 1, 0);
         glTexCoord2f(0.0f, 0.0f); glVertex3f(x0, y1, z0);
-        glTexCoord2f(1.0f, 0.0f); glVertex3f(x0, y1, z1);
-        glTexCoord2f(1.0f, 1.0f); glVertex3f(x1, y1, z1);
-        glTexCoord2f(0.0f, 1.0f); glVertex3f(x1, y1, z0);
+        glTexCoord2f(2.0f, 0.0f); glVertex3f(x0, y1, z1);
+        glTexCoord2f(2.0f, 2.0f); glVertex3f(x1, y1, z1);
+        glTexCoord2f(0.0f, 2.0f); glVertex3f(x1, y1, z0);
     glEnd();
 
     glDisable(GL_TEXTURE_2D);
@@ -58,8 +58,8 @@ void drawFloor() {
     glBindTexture(GL_TEXTURE_2D, texFloor);
     glColor3f(1.0f, 1.0f, 1.0f);
 
-    float tu = COLS / 2.0f;
-    float tv = ROWS / 2.0f;
+    float tu = 2.0f;
+    float tv = 2.0f;
 
     glBegin(GL_QUADS);
         glNormal3f(0, 1, 0);
@@ -152,6 +152,7 @@ void drawKeyOrb(int colorIndex, float x, float z) {
     float t = glutGet(GLUT_ELAPSED_TIME) / 1000.0f;
     float bob = 0.12f * sinf(t * 2.2f + colorIndex * 1.7f);
     float y = 0.55f + bob;
+    float rotY = t * 45.0f + colorIndex * 120.0f;
 
     GLfloat emis[] = {r * 0.7f, g * 0.7f, b * 0.7f, 1.0f};
     glMaterialfv(GL_FRONT, GL_EMISSION, emis);
@@ -159,7 +160,28 @@ void drawKeyOrb(int colorIndex, float x, float z) {
 
     glPushMatrix();
         glTranslatef(x, y, z);
-        glutSolidSphere(0.20f, 18, 18);
+        glRotatef(rotY, 0, 1, 0);
+
+        // Bow (ring)
+        glPushMatrix();
+            glRotatef(90, 1, 0, 0);
+            glutSolidTorus(0.025f, 0.09f, 8, 16);
+        glPopMatrix();
+
+        // Shaft
+        glPushMatrix();
+            glTranslatef(0.0f, -0.07f, 0.0f);
+            glScalef(0.03f, 0.18f, 0.03f);
+            glutSolidCube(1.0f);
+        glPopMatrix();
+
+        // Teeth
+        glPushMatrix();
+            glTranslatef(0.01f, -0.20f, 0.0f);
+            glScalef(0.04f, 0.035f, 0.025f);
+            glutSolidCube(1.0f);
+        glPopMatrix();
+
     glPopMatrix();
 
     GLfloat zero[] = {0,0,0,1};
@@ -264,7 +286,7 @@ void setupLighting() {
     glColorMaterial(GL_FRONT, GL_AMBIENT_AND_DIFFUSE);
     glShadeModel(GL_SMOOTH);
 
-    GLfloat ambGlobal[] = {0.020f, 0.018f, 0.016f, 1.0f};
+    GLfloat ambGlobal[] = {0.055f, 0.050f, 0.045f, 1.0f};
     glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambGlobal);
 
     GLfloat lightPos[]  = {cam.x, cam.y, cam.z, 1.0f};
@@ -280,14 +302,14 @@ void setupLighting() {
 
     setupKeyLights();
 
-    float range = flashlightActive ? 5.0f : 2.0f;
+    float range = flashlightActive ? 5.0f : 2.5f;
     glLightf(GL_LIGHT0, GL_CONSTANT_ATTENUATION,  1.0f);
     glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION,    1.05f / range);
     glLightf(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, 0.30f / (range * range));
 
     glEnable(GL_FOG);
     glFogi(GL_FOG_MODE, GL_EXP2);
-    glFogf(GL_FOG_DENSITY, flashlightActive ? 0.06f : 0.19f);
+    glFogf(GL_FOG_DENSITY, flashlightActive ? 0.06f : 0.16f);
     GLfloat fogCol[] = {0.02f, 0.02f, 0.02f, 1.0f};
     glFogfv(GL_FOG_COLOR, fogCol);
 }

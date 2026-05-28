@@ -56,7 +56,7 @@ void update(int v) {
         if (statusMsgTimer < 0.0f) statusMsgTimer = 0.0f;
     }
 
-    if (gameState == STATE_PLAY) {
+    if (gameState == STATE_PLAY && !mapRevealActive) {
         float rad = toRad(cam.angle);
         float dx  = 0, dz = 0;
         float spd = cam.speed * dt;

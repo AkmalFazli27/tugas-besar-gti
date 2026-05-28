@@ -49,7 +49,7 @@ void keyDown(unsigned char k, int x, int y) {
 
     if (k == 27) exit(0);
 
-    if (gameState == STATE_PLAY) {
+    if (gameState == STATE_PLAY && !mapRevealActive) {
         if (k == 'f' || k == 'F') {
             if (!flashlightActive && flashlightUses > 0) {
                 flashlightUses--;
@@ -138,7 +138,7 @@ void specialKey(int k, int x, int y) {
 //  GLUT — MOUSE LOOK
 // ============================================================
 void mouseMove(int x, int y) {
-    if (gameState != STATE_PLAY) return;
+    if (gameState != STATE_PLAY || mapRevealActive) return;
     if (mouseWarping) {
         mouseWarping = false;
         return;

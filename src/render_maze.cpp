@@ -119,6 +119,15 @@ void drawExit(bool overlay) {
         glVertex3f(x0, y, z1);
     glEnd();
 
+    // Draw "E" label on overlay
+    if (overlay) {
+        float cx = (x0 + x1) / 2.0f;
+        float cz = (z0 + z1) / 2.0f;
+        glColor3f(1.0f, 1.0f, 1.0f);
+        glRasterPos3f(cx - 0.12f, y + 0.01f, cz);
+        glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, 'E');
+    }
+
     GLfloat zero[] = {0,0,0,1};
     glMaterialfv(GL_FRONT, GL_EMISSION, zero);
 }
@@ -147,6 +156,39 @@ void drawSpawn() {
 
     GLfloat zero[] = {0,0,0,1};
     glMaterialfv(GL_FRONT, GL_EMISSION, zero);
+}
+
+// ============================================================
+//  RENDER — MARKER SPAWN OVERLAY (with "S" label)
+// ============================================================
+void drawSpawnOverlay() {
+    float x0 = spawnCol * CELL + 0.2f;
+    float x1 = x0 + CELL - 0.4f;
+    float z0 = spawnRow * CELL + 0.2f;
+    float z1 = z0 + CELL - 0.4f;
+    float y  = W_HEIGHT + 0.05f;
+
+    GLfloat emis[] = {0.2f, 0.4f, 1.0f, 1.0f};
+    glMaterialfv(GL_FRONT, GL_EMISSION, emis);
+    glColor3f(0.3f, 0.6f, 1.0f);
+
+    glBegin(GL_QUADS);
+        glNormal3f(0, 1, 0);
+        glVertex3f(x0, y, z0);
+        glVertex3f(x1, y, z0);
+        glVertex3f(x1, y, z1);
+        glVertex3f(x0, y, z1);
+    glEnd();
+
+    // Draw "S" label
+    float cx = (x0 + x1) / 2.0f;
+    float cz = (z0 + z1) / 2.0f;
+    glColor3f(1.0f, 1.0f, 1.0f);
+    glRasterPos3f(cx - 0.12f, y + 0.01f, cz);
+    glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, 'S');
+
+    GLfloat zero2[] = {0,0,0,1};
+    glMaterialfv(GL_FRONT, GL_EMISSION, zero2);
 }
 
 // ============================================================
@@ -241,22 +283,59 @@ void drawCodeSpots(bool overlay) {
             continue;
         }
 
-        float x0 = codeSpots[i].col * CELL + 0.25f;
-        float x1 = x0 + CELL - 0.5f;
-        float z0 = codeSpots[i].row * CELL + 0.25f;
-        float z1 = z0 + CELL - 0.5f;
-        float y  = W_HEIGHT + 0.06f;
+        float y = W_HEIGHT + 0.06f;
 
-        GLfloat emis[] = {r * 0.6f, g * 0.6f, b * 0.6f, 1.0f};
+        GLfloat emis[] = {r * 0.7f, g * 0.7f, b * 0.7f, 1.0f};
         glMaterialfv(GL_FRONT, GL_EMISSION, emis);
         glColor3f(r, g, b);
 
+        // Key shape: ring (bow) + shaft + teeth
+        float segs = 16;
+        float ringR = 0.25f;
+        float ringTube = 0.06f;
+        float shaftW = 0.08f;
+        float shaftH = 0.45f;
+        float toothW = 0.14f;
+        float toothH = 0.10f;
+
+        // Ring (bow) — filled circle outline
+        glLineWidth(3.0f);
+        glBegin(GL_LINE_LOOP);
+        for (int s = 0; s < (int)segs; s++) {
+            float a = 2.0f * 3.14159265f * s / segs;
+            glVertex3f(cx + cosf(a) * ringR, y, cz + sinf(a) * ringR);
+        }
+        glEnd();
+        glLineWidth(1.0f);
+
+        // Shaft
+        float sx0 = cx - shaftW / 2.0f;
+        float sx1 = cx + shaftW / 2.0f;
+        float sz0 = cz - ringR - shaftH;
+        float sz1 = cz - ringR;
         glBegin(GL_QUADS);
-            glNormal3f(0, 1, 0);
-            glVertex3f(x0, y, z0);
-            glVertex3f(x1, y, z0);
-            glVertex3f(x1, y, z1);
-            glVertex3f(x0, y, z1);
+            glVertex3f(sx0, y, sz0);
+            glVertex3f(sx1, y, sz0);
+            glVertex3f(sx1, y, sz1);
+            glVertex3f(sx0, y, sz1);
+        glEnd();
+
+        // Teeth (2 small rectangles at bottom of shaft)
+        float ty0 = sz0 - toothH;
+        float ty1 = sz0;
+        // Tooth 1 (left)
+        glBegin(GL_QUADS);
+            glVertex3f(cx - toothW / 2.0f, y, ty0);
+            glVertex3f(cx - shaftW / 2.0f, y, ty0);
+            glVertex3f(cx - shaftW / 2.0f, y, ty1);
+            glVertex3f(cx - toothW / 2.0f, y, ty1);
+        glEnd();
+        // Tooth 2 (right, slightly lower)
+        glBegin(GL_QUADS);
+            glVertex3f(cx + shaftW / 2.0f, y, ty0 - 0.06f);
+            glVertex3f(cx + toothW / 2.0f, y, ty0 - 0.06f);
+            glVertex3f(cx + toothW / 2.0f, y, ty1 - 0.06f);
+            glVertex3f(cx + shaftW / 2.0f, y, ty1 - 0.06f);
         glEnd();
 
         GLfloat zero[] = {0,0,0,1};

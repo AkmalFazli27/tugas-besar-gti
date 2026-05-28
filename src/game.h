@@ -167,6 +167,7 @@ void drawFloor();
 void drawCeiling();
 void drawExit(bool overlay = false);
 void drawSpawn();
+void drawSpawnOverlay();
 void drawKeyOrb(int colorIndex, float x, float z);
 void setupKeyLights();
 void drawCodeSpots(bool overlay = false);

@@ -47,7 +47,7 @@ int spawnRow = 1, spawnCol = 1;
 
 Camera cam;
 bool keys[256] = {};
-GameState gameState = STATE_MEMORIZE;
+GameState gameState = STATE_MENU;
 
 float mouseSensitivity = 0.12f;
 bool  mouseWarping = false;
@@ -58,6 +58,9 @@ int   currentWinH = WIN_H;
 CodeSpot codeSpots[CODE_COUNT];
 int codeDigits[CODE_COUNT] = {0};
 bool codeCollected[CODE_COUNT] = {false};
+
+int  menuSelection = 0;
+bool showInfo = false;
 
 const char* COLOR_NAMES[CODE_COUNT] = {"MERAH", "BIRU", "KUNING"};
 const float COLOR_RGB[CODE_COUNT][3] = {

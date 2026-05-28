@@ -23,6 +23,7 @@ const int   ROWS      = 15;
 const int   COLS      = 15;
 const float CELL      = 2.0f;
 const float W_HEIGHT  = 3.0f;
+const float COLLISION_MARGIN = 0.4f;
 
 extern GLuint texWall;
 extern GLuint texFloor;
@@ -64,6 +65,7 @@ extern bool keys[256];
 //  STATE GAME
 // ============================================================
 enum GameState {
+    STATE_MENU,
     STATE_MEMORIZE,
     STATE_PLAY,
     STATE_ENTER_CODE,
@@ -127,6 +129,12 @@ extern int   inputIndex;
 extern int viewMode;
 
 // ============================================================
+//  MENU STATE
+// ============================================================
+extern int  menuSelection;
+extern bool showInfo;
+
+// ============================================================
 //  FUNCTION DECLARATIONS
 // ============================================================
 
@@ -167,22 +175,24 @@ void drawMaze();
 // Render — lighting & HUD
 void setupLighting();
 void drawText(int x, int y, const char* text, void* font);
+int  textWidth(void* font, const char* s);
+int  textWidth18(const char* s);
+int  textWidth12(const char* s);
 void drawHUD();
+void drawMenu();
+void drawMenuInfo();
 
-// HUD helper functions
+// Render — helper functions
 void drawFilledRect(float x, float y, float w, float h);
-void drawOutlinedRect(float x, float y, float w, float h, float thickness);
 void drawFilledCircle(float cx, float cy, float r, int segments);
 void drawOutlinedCircle(float cx, float cy, float r, int segments, float thickness);
-void drawProgressBar(float x, float y, float w, float h, float progress,
-                     float r, float g, float b, float bgR, float bgG, float bgB);
-void drawPanel(float x, float y, float w, float h, float alpha);
 
 // Entry
 void display();
 void update(int v);
 void keyDown(unsigned char k, int x, int y);
 void keyUp(unsigned char k, int x, int y);
+void specialKey(int k, int x, int y);
 void mouseMove(int x, int y);
 void reshape(int w, int h);
 void initGL();

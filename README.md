@@ -34,7 +34,24 @@ Kamu terjebak dalam labirin gelap! Sebelum kegelapan menutupi segalanya, kamu me
 | `ENTER` | Pilih opsi |
 | `ESC` | Kembali / Keluar |
 
-## Compile & Run
+## Quick Start
+
+Jalankan satu script untuk install dependencies dan compile sekaligus:
+
+```powershell
+.\setup.ps1
+```
+
+Setelah selesai, jalankan game:
+
+```powershell
+$env:Path = "C:\msys64\mingw64\bin;$env:Path"
+.\memory_maze_game.exe
+```
+
+> Script membutuhkan PowerShell dan MSYS2 yang sudah terinstall di `C:\msys64`. Jika belum punya MSYS2, install dari [msys2.org](https://www.msys2.org/).
+
+## Compile & Run (Manual)
 
 ### Prerequisites
 

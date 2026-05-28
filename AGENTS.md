@@ -5,12 +5,7 @@
 Uses **MSYS2 MinGW64** (not MSVC). Compile with:
 
 ```
-C:\msys64\mingw64\bin\g++.exe -std=c++17 -g src\game_state.cpp src\game_logic.cpp src\render.cpp src\main.cpp -o memory_maze_game.exe -lfreeglut -lopengl32 -lglu32
-```
-
-The older `maze_structure.cpp` (Phase 1) is a single-file build:
-```
-C:\msys64\mingw64\bin\g++.exe -std=c++17 -g src\maze_structure.cpp -o memory_maze.exe -lfreeglut -lopengl32 -lglu32
+C:\msys64\mingw64\bin\g++.exe -std=c++17 -g src\game_state.cpp src\game_logic.cpp src\render_helpers.cpp src\render_maze.cpp src\render_hud.cpp src\render_menu.cpp src\render_scene.cpp src\input.cpp src\update.cpp src\main.cpp -o memory_maze_game.exe -lfreeglut -lopengl32 -lglu32
 ```
 
 ## Run
@@ -23,14 +18,19 @@ $env:Path = "C:\msys64\mingw64\bin;$env:Path"; .\memory_maze_game.exe
 
 ## Source Files
 
-- `src/maze_structure.cpp` — Phase 1: basic maze structure, first-person camera, key collection (single file)
-- `src/main.cpp` — Phase 2 entry point: GLUT callbacks and `main()`. Includes `game.h`
+- `src/main.cpp` — Entry point: GLUT init, `initGL()`, `main()`
 - `src/game.h` — Shared declarations: `extern` globals, structs, enums, function prototypes
-- `src/game_state.cpp` — Global variable definitions + utility functions
+- `src/game_state.cpp` — Global variable definitions, utility functions, texture loading
 - `src/game_logic.cpp` — Game logic: spawn placement, code placement, reset
-- `src/render.cpp` — All rendering: walls, floor, ceiling, markers, lighting, HUD
+- `src/render_helpers.cpp` — Shared 2D rendering helpers: `drawFilledRect`, `drawText`, etc.
+- `src/render_maze.cpp` — 3D maze rendering: walls, floor, ceiling, markers, lighting
+- `src/render_hud.cpp` — Gameplay HUD: timer, status, key panel, code input, win/lose overlay
+- `src/render_menu.cpp` — Menu screen: main menu, info overlay
+- `src/render_scene.cpp` — Scene orchestration: `display()` (camera setup + draw calls)
+- `src/input.cpp` — Input handling: keyboard (`keyDown`, `keyUp`, `specialKey`), mouse (`mouseMove`)
+- `src/update.cpp` — Game loop: `update()` (timer, physics, state transitions), `reshape()`
 
-Both phases are standalone executables built without any build system (no CMake/Makefile).
+All source files are standalone executables built without any build system (no CMake/Makefile).
 
 ## Dependencies
 

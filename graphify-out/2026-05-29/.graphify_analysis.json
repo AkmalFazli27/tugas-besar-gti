@@ -1,0 +1,434 @@
+{
+  "communities": {
+    "0": [
+      "src_stb_image_stbi_at_eof",
+      "src_stb_image_stbi_check_png_header",
+      "src_stb_image_stbi_compute_transparency",
+      "src_stb_image_stbi_de_iphone",
+      "src_stb_image_stbi_decode_jpeg_header",
+      "src_stb_image_stbi_decode_jpeg_image",
+      "src_stb_image_stbi_err",
+      "src_stb_image_stbi_get16be",
+      "src_stb_image_stbi_get32be",
+      "src_stb_image_stbi_get8",
+      "src_stb_image_stbi_get_chunk_header",
+      "src_stb_image_stbi_get_marker",
+      "src_stb_image_stbi_gif_header",
+      "src_stb_image_stbi_gif_info",
+      "src_stb_image_stbi_gif_load_next",
+      "src_stb_image_stbi_gif_parse_colortable",
+      "src_stb_image_stbi_info_main",
+      "src_stb_image_stbi_jpeg_info",
+      "src_stb_image_stbi_parse_png_file",
+      "src_stb_image_stbi_pic_info",
+      "src_stb_image_stbi_pic_is4",
+      "src_stb_image_stbi_pic_load",
+      "src_stb_image_stbi_pic_test_core",
+      "src_stb_image_stbi_pnm_getinteger",
+      "src_stb_image_stbi_pnm_info",
+      "src_stb_image_stbi_pnm_skip_whitespace",
+      "src_stb_image_stbi_process_frame_header",
+      "src_stb_image_stbi_process_gif_raster",
+      "src_stb_image_stbi_process_marker",
+      "src_stb_image_stbi_process_scan_header",
+      "src_stb_image_stbi_psd_decode_rle",
+      "src_stb_image_stbi_psd_info",
+      "src_stb_image_stbi_psd_is16",
+      "src_stb_image_stbi_psd_load",
+      "src_stb_image_stbi_readval",
+      "src_stb_image_stbi_skip",
+      "src_stb_image_stbi_skip_jpeg_junk_at_end",
+      "src_stb_image_stbi_tga_info",
+      "src_stb_image_stbi_tga_test"
+    ],
+    "1": [
+      "src_stb_image_h",
+      "src_stb_image_resample_row_1",
+      "src_stb_image_stbi_build_fast_ac",
+      "src_stb_image_stbi_clamp",
+      "src_stb_image_stbi_cleanup_jpeg",
+      "src_stb_image_stbi_convert_iphone_png_to_rgb",
+      "src_stb_image_stbi_convert_wchar_to_utf8",
+      "src_stb_image_stbi_copyval",
+      "src_stb_image_stbi_cpuid3",
+      "src_stb_image_stbi_failure_reason",
+      "src_stb_image_stbi_free_jpeg_components",
+      "src_stb_image_stbi_hdr_to_ldr_scale",
+      "src_stb_image_stbi_idct_block",
+      "src_stb_image_stbi_idct_simd",
+      "src_stb_image_stbi_image_free",
+      "src_stb_image_stbi_jpeg_dequantize",
+      "src_stb_image_stbi_jpeg_finish",
+      "src_stb_image_stbi_ldr_to_hdr_gamma",
+      "src_stb_image_stbi_ldr_to_hdr_scale",
+      "src_stb_image_stbi_out_gif_code",
+      "src_stb_image_stbi_pnm_isdigit",
+      "src_stb_image_stbi_pnm_isspace",
+      "src_stb_image_stbi_resample_row_generic",
+      "src_stb_image_stbi_resample_row_v_2",
+      "src_stb_image_stbi_set_flip_vertically_on_load",
+      "src_stb_image_stbi_set_unpremultiply_on_load",
+      "src_stb_image_stbi_setup_jpeg",
+      "src_stb_image_stbi_sse2_available",
+      "src_stb_image_stbi_stdio_eof",
+      "src_stb_image_stbi_stdio_read",
+      "src_stb_image_stbi_stdio_skip",
+      "src_stb_image_stbi_ycbcr_to_rgb_row",
+      "src_stb_image_stbi_ycbcr_to_rgb_simd"
+    ],
+    "2": [
+      "src_game_logic_computereachablefromexit",
+      "src_game_logic_cpp",
+      "src_game_logic_iscellusedforcode",
+      "src_game_logic_placecodes",
+      "src_game_logic_placerandomspawn",
+      "src_game_logic_resetgame",
+      "src_game_state_allcodescollected",
+      "src_game_state_buildchecker",
+      "src_game_state_codeindexatplayer",
+      "src_game_state_cpp",
+      "src_game_state_inittextures",
+      "src_game_state_iscellwalkable",
+      "src_game_state_isplayerat",
+      "src_game_state_iswalkable",
+      "src_game_state_loadtexture2d",
+      "src_game_state_playercol",
+      "src_game_state_playerrow",
+      "src_game_state_randrange",
+      "src_game_state_resetinputcodes",
+      "src_game_state_setstatus",
+      "src_game_state_torad",
+      "src_input_cpp",
+      "src_input_keydown",
+      "src_input_keyup",
+      "src_input_mousemove",
+      "src_input_specialkey",
+      "src_main_cpp",
+      "src_main_initgl",
+      "src_main_main",
+      "src_update_cpp",
+      "src_update_reshape",
+      "src_update_update"
+    ],
+    "3": [
+      "src_game_h",
+      "src_render_helpers_cpp",
+      "src_render_helpers_drawfilledcircle",
+      "src_render_helpers_drawfilledrect",
+      "src_render_helpers_drawoutlinedcircle",
+      "src_render_helpers_drawtext",
+      "src_render_helpers_textwidth",
+      "src_render_helpers_textwidth12",
+      "src_render_helpers_textwidth18",
+      "src_render_hud_cpp",
+      "src_render_hud_drawhud",
+      "src_render_maze_cpp",
+      "src_render_maze_drawceiling",
+      "src_render_maze_drawcodespots",
+      "src_render_maze_drawexit",
+      "src_render_maze_drawfloor",
+      "src_render_maze_drawkeyorb",
+      "src_render_maze_drawmaze",
+      "src_render_maze_drawspawn",
+      "src_render_maze_drawspawnoverlay",
+      "src_render_maze_drawwall",
+      "src_render_maze_setupkeylights",
+      "src_render_maze_setuplighting",
+      "src_render_menu_cpp",
+      "src_render_menu_drawmenu",
+      "src_render_menu_drawmenuinfo",
+      "src_render_scene_cpp",
+      "src_render_scene_display"
+    ],
+    "4": [
+      "src_stb_image_load_jpeg_image",
+      "src_stb_image_stbi_addsizes_valid",
+      "src_stb_image_stbi_blinn_8x8",
+      "src_stb_image_stbi_compute_y",
+      "src_stb_image_stbi_convert_format",
+      "src_stb_image_stbi_create_png_alpha_expand8",
+      "src_stb_image_stbi_create_png_image",
+      "src_stb_image_stbi_expand_png_palette",
+      "src_stb_image_stbi_getn",
+      "src_stb_image_stbi_gif_load",
+      "src_stb_image_stbi_hdr_convert",
+      "src_stb_image_stbi_hdr_gettoken",
+      "src_stb_image_stbi_hdr_load",
+      "src_stb_image_stbi_hdr_to_ldr",
+      "src_stb_image_stbi_jpeg_load",
+      "src_stb_image_stbi_load_gif_main",
+      "src_stb_image_stbi_load_gif_main_outofmem",
+      "src_stb_image_stbi_mad2sizes_valid",
+      "src_stb_image_stbi_malloc",
+      "src_stb_image_stbi_malloc_mad2",
+      "src_stb_image_stbi_mul2sizes_valid",
+      "src_stb_image_stbi_paeth",
+      "src_stb_image_stbi_pnm_load",
+      "src_stb_image_stbi_tga_get_comp",
+      "src_stb_image_stbi_tga_load",
+      "src_stb_image_stbi_tga_read_rgb16"
+    ],
+    "5": [
+      "src_stb_image_stbi_bmp_test",
+      "src_stb_image_stbi_do_png",
+      "src_stb_image_stbi_gif_test",
+      "src_stb_image_stbi_gif_test_raw",
+      "src_stb_image_stbi_hdr_info",
+      "src_stb_image_stbi_hdr_test",
+      "src_stb_image_stbi_jpeg_test",
+      "src_stb_image_stbi_load_main",
+      "src_stb_image_stbi_pic_test",
+      "src_stb_image_stbi_png_info",
+      "src_stb_image_stbi_png_is16",
+      "src_stb_image_stbi_png_load",
+      "src_stb_image_stbi_png_test",
+      "src_stb_image_stbi_pnm_test",
+      "src_stb_image_stbi_psd_test",
+      "src_stb_image_stbi_rewind"
+    ],
+    "6": [
+      "game_h",
+      "game_logic_cpp",
+      "game_state_cpp",
+      "input_cpp",
+      "main_cpp",
+      "main_initgl",
+      "render_helpers_cpp",
+      "render_hud_cpp",
+      "render_maze_cpp",
+      "render_menu_cpp",
+      "render_scene_cpp",
+      "render_scene_display",
+      "stb_image_h",
+      "update_cpp",
+      "update_update"
+    ],
+    "7": [
+      "src_stb_image_stbi_convert_16_to_8",
+      "src_stb_image_stbi_convert_8_to_16",
+      "src_stb_image_stbi_float_postprocess",
+      "src_stb_image_stbi_info_from_memory",
+      "src_stb_image_stbi_is_hdr_from_memory",
+      "src_stb_image_stbi_ldr_to_hdr",
+      "src_stb_image_stbi_load_16_from_memory",
+      "src_stb_image_stbi_load_and_postprocess_16bit",
+      "src_stb_image_stbi_load_and_postprocess_8bit",
+      "src_stb_image_stbi_load_from_callbacks",
+      "src_stb_image_stbi_load_from_memory",
+      "src_stb_image_stbi_loadf_main",
+      "src_stb_image_stbi_start_mem",
+      "src_stb_image_stbi_vertical_flip"
+    ],
+    "8": [
+      "src_stb_image_stbi_bit_reverse",
+      "src_stb_image_stbi_build_huffman",
+      "src_stb_image_stbi_compute_huffman_codes",
+      "src_stb_image_stbi_fill_bits",
+      "src_stb_image_stbi_parse_huffman_block",
+      "src_stb_image_stbi_parse_uncompressed_block",
+      "src_stb_image_stbi_parse_zlib",
+      "src_stb_image_stbi_parse_zlib_header",
+      "src_stb_image_stbi_zeof",
+      "src_stb_image_stbi_zexpand",
+      "src_stb_image_stbi_zget8",
+      "src_stb_image_stbi_zhuffman_decode",
+      "src_stb_image_stbi_zreceive"
+    ],
+    "9": [
+      "src_stb_image_stbi_fopen",
+      "src_stb_image_stbi_info",
+      "src_stb_image_stbi_info_from_file",
+      "src_stb_image_stbi_is_16_bit",
+      "src_stb_image_stbi_is_16_bit_from_file",
+      "src_stb_image_stbi_is_hdr",
+      "src_stb_image_stbi_is_hdr_from_file",
+      "src_stb_image_stbi_load",
+      "src_stb_image_stbi_load_from_file",
+      "src_stb_image_stbi_loadf",
+      "src_stb_image_stbi_start_file"
+    ],
+    "10": [
+      "src_stb_image_stbi_addints_valid",
+      "src_stb_image_stbi_extend_receive",
+      "src_stb_image_stbi_grow_buffer_unsafe",
+      "src_stb_image_stbi_jpeg_decode_block",
+      "src_stb_image_stbi_jpeg_get_bit",
+      "src_stb_image_stbi_jpeg_huff_decode",
+      "src_stb_image_stbi_jpeg_reset",
+      "src_stb_image_stbi_mul2shorts_valid",
+      "src_stb_image_stbi_parse_entropy_coded_data"
+    ],
+    "11": [
+      "src_stb_image_stbi_bitcount",
+      "src_stb_image_stbi_bmp_info",
+      "src_stb_image_stbi_bmp_load",
+      "src_stb_image_stbi_bmp_parse_header",
+      "src_stb_image_stbi_bmp_set_mask_defaults",
+      "src_stb_image_stbi_bmp_test_raw",
+      "src_stb_image_stbi_get32le",
+      "src_stb_image_stbi_high_bit",
+      "src_stb_image_stbi_shiftsigned"
+    ],
+    "12": [
+      "src_stb_image_stbi_info_from_callbacks",
+      "src_stb_image_stbi_is_16_bit_from_callbacks",
+      "src_stb_image_stbi_is_16_bit_from_memory",
+      "src_stb_image_stbi_is_16_main",
+      "src_stb_image_stbi_is_hdr_from_callbacks",
+      "src_stb_image_stbi_pnm_is16",
+      "src_stb_image_stbi_refill_buffer",
+      "src_stb_image_stbi_start_callbacks"
+    ],
+    "13": [
+      "src_stb_image_stbi_do_zlib",
+      "src_stb_image_stbi_zlib_decode_buffer",
+      "src_stb_image_stbi_zlib_decode_malloc",
+      "src_stb_image_stbi_zlib_decode_malloc_guesssize",
+      "src_stb_image_stbi_zlib_decode_noheader_buffer",
+      "src_stb_image_stbi_zlib_decode_noheader_malloc"
+    ],
+    "14": [
+      "game_state_inittextures",
+      "stone_floor_jpg",
+      "stone_wall_jpg"
+    ],
+    "15": [
+      "setup_ps1"
+    ],
+    "16": [
+      "game_logic_resetgame"
+    ]
+  },
+  "cohesion": {
+    "0": 0.1417004048582996,
+    "1": 0.07007575757575757,
+    "2": 0.10887096774193548,
+    "3": 0.15608465608465608,
+    "4": 0.11692307692307692,
+    "5": 0.2,
+    "6": 0.14285714285714285,
+    "7": 0.2087912087912088,
+    "8": 0.3076923076923077,
+    "9": 0.2545454545454545,
+    "10": 0.3333333333333333,
+    "11": 0.25,
+    "12": 0.25,
+    "13": 0.3333333333333333,
+    "14": 0.6666666666666666,
+    "15": 1.0,
+    "16": 1.0
+  },
+  "gods": [
+    {
+      "id": "src_stb_image_stbi_get8",
+      "label": "stbi__get8()",
+      "degree": 36
+    },
+    {
+      "id": "src_stb_image_stbi_err",
+      "label": "stbi__err()",
+      "degree": 26
+    },
+    {
+      "id": "src_stb_image_stbi_get16be",
+      "label": "stbi__get16be()",
+      "degree": 23
+    },
+    {
+      "id": "src_stb_image_stbi_load_main",
+      "label": "stbi__load_main()",
+      "degree": 22
+    },
+    {
+      "id": "src_stb_image_stbi_rewind",
+      "label": "stbi__rewind()",
+      "degree": 21
+    },
+    {
+      "id": "src_stb_image_stbi_malloc_mad2",
+      "label": "stbi__malloc_mad2()",
+      "degree": 16
+    },
+    {
+      "id": "src_stb_image_stbi_parse_png_file",
+      "label": "stbi__parse_png_file()",
+      "degree": 16
+    },
+    {
+      "id": "src_stb_image_stbi_malloc",
+      "label": "stbi__malloc()",
+      "degree": 15
+    },
+    {
+      "id": "src_stb_image_stbi_info_main",
+      "label": "stbi__info_main()",
+      "degree": 14
+    },
+    {
+      "id": "src_render_scene_display",
+      "label": "display()",
+      "degree": 13
+    }
+  ],
+  "surprises": [
+    {
+      "source": "display()",
+      "target": "toRad()",
+      "source_files": [
+        "src/render_scene.cpp",
+        "src/game_state.cpp"
+      ],
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "why": "inferred connection - not explicitly stated in source; bridges separate communities"
+    },
+    {
+      "source": "drawHUD()",
+      "target": "isPlayerAt()",
+      "source_files": [
+        "src/render_hud.cpp",
+        "src/game_state.cpp"
+      ],
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "why": "inferred connection - not explicitly stated in source; bridges separate communities"
+    },
+    {
+      "source": "drawHUD()",
+      "target": "allCodesCollected()",
+      "source_files": [
+        "src/render_hud.cpp",
+        "src/game_state.cpp"
+      ],
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "why": "inferred connection - not explicitly stated in source; bridges separate communities"
+    },
+    {
+      "source": "drawHUD()",
+      "target": "codeIndexAtPlayer()",
+      "source_files": [
+        "src/render_hud.cpp",
+        "src/game_state.cpp"
+      ],
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "why": "inferred connection - not explicitly stated in source; bridges separate communities"
+    },
+    {
+      "source": "drawHUD()",
+      "target": "drawOutlinedCircle()",
+      "source_files": [
+        "src/render_hud.cpp",
+        "src/render_helpers.cpp"
+      ],
+      "confidence": "INFERRED",
+      "relation": "calls",
+      "why": "inferred connection - not explicitly stated in source; peripheral node `drawOutlinedCircle()` unexpectedly reaches hub `drawHUD()`"
+    }
+  ],
+  "tokens": {
+    "input": 37363,
+    "output": 2084
+  }
+}

@@ -2,3 +2,7 @@
 .opencode
 *.exe
 *.log
+*.txt
+graphify-out/manifest.json    
+graphify-out/cost.json       
+graphify-out/cache/         

@@ -86,6 +86,12 @@ extern int   currentWinW;
 extern int   currentWinH;
 
 // ============================================================
+//  HEAD BOBBING
+// ============================================================
+extern float headBobTimer;
+extern float headBobOffset;
+
+// ============================================================
 //  KODE WARNA
 // ============================================================
 enum CodeColor {

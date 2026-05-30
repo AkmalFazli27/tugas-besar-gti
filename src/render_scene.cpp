@@ -29,8 +29,8 @@ void display() {
         float lx  = cam.x + sinf(radYaw) * cosf(radPitch);
         float ly  = cam.y + sinf(radPitch);
         float lz  = cam.z + cosf(radYaw) * cosf(radPitch);
-        gluLookAt(cam.x, cam.y, cam.z,
-                  lx,    ly,    lz,
+        gluLookAt(cam.x, cam.y + headBobOffset, cam.z,
+                  lx,    ly + headBobOffset,    lz,
                   0, 1, 0);
 
         setupLighting();

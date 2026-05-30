@@ -229,6 +229,9 @@ bool  invertY = false;
 int   currentWinW = WIN_W;
 int   currentWinH = WIN_H;
 
+float headBobTimer = 0.0f;
+float headBobOffset = 0.0f;
+
 CodeSpot codeSpots[CODE_COUNT];
 int codeDigits[CODE_COUNT] = {0};
 bool codeCollected[CODE_COUNT] = {false};

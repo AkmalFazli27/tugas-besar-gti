@@ -86,6 +86,17 @@ void update(int v) {
             cam.x = nx;
         if (canMoveTo(cam.x, nz))
             cam.z = nz;
+
+        // Head bobbing
+        bool isMoving = (keys['w'] || keys['W'] || keys['s'] || keys['S'] || 
+                         keys['a'] || keys['A'] || keys['d'] || keys['D']);
+        if (isMoving) {
+            headBobTimer += dt * 10.0f;
+            headBobOffset = 0.05f * sinf(headBobTimer);
+        } else {
+            headBobOffset *= (1.0f - dt * 5.0f);
+            if (fabsf(headBobOffset) < 0.001f) headBobOffset = 0.0f;
+        }
     }
 
     glutPostRedisplay();

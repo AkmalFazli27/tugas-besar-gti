@@ -454,7 +454,8 @@ void drawHUD() {
             glLineWidth(1.0f);
 
             glColor3f(0.2f, 1.0f, 0.4f);
-            drawText((int)(overlayX + overlayW / 2 - 90), (int)(overlayY + 70), "KAMU BERHASIL KELUAR!", GLUT_BITMAP_HELVETICA_18);
+            int winTW = textWidth18("KAMU BERHASIL KELUAR!");
+            drawText((int)(overlayX + (overlayW - winTW) / 2.0f), (int)(overlayY + 70), "KAMU BERHASIL KELUAR!", GLUT_BITMAP_HELVETICA_18);
         } else {
             glColor3f(1.0f, 0.2f, 0.2f);
             glLineWidth(2.0f);
@@ -467,11 +468,13 @@ void drawHUD() {
             glLineWidth(1.0f);
 
             glColor3f(1.0f, 0.2f, 0.2f);
-            drawText((int)(overlayX + overlayW / 2 - 70), (int)(overlayY + 70), "WAKTU HABIS!", GLUT_BITMAP_HELVETICA_18);
+            int loseTW = textWidth18("WAKTU HABIS!");
+            drawText((int)(overlayX + (overlayW - loseTW) / 2.0f), (int)(overlayY + 70), "WAKTU HABIS!", GLUT_BITMAP_HELVETICA_18);
         }
 
         glColor3f(0.7f, 0.7f, 0.7f);
-        drawText((int)(overlayX + overlayW / 2 - 120), (int)(overlayY + 30), "ENTER: Main lagi  |  ESC: Keluar", GLUT_BITMAP_HELVETICA_12);
+        int promptTW = textWidth12("ENTER: Main lagi  |  ESC: Keluar");
+        drawText((int)(overlayX + (overlayW - promptTW) / 2.0f), (int)(overlayY + 30), "ENTER: Main lagi  |  ESC: Keluar", GLUT_BITMAP_HELVETICA_12);
     }
 
     glDisable(GL_BLEND);

@@ -40,7 +40,7 @@ void drawMenu() {
 
         // Title text
         glColor3f(1.0f, 0.85f, 0.3f);
-        drawText((int)(WIN_W / 2 - titleW / 2), WIN_H - 215, title, titleFont);
+        drawText((int)(WIN_W / 2 - titleW / 2), (int)(WIN_H - 240.0f + (50.0f - 24.0f) / 2.0f + 2.0f), title, titleFont);
 
         // Subtitle
         const char* sub = "Hafalkan Peta - Cari Kunci - Keluar dari Labirin";
@@ -159,8 +159,8 @@ void drawMenuInfo() {
     drawFilledRect(0, 0, (float)WIN_W, (float)WIN_H);
 
     // Info panel
-    float panelW = 580.0f;
-    float panelH = 440.0f;
+    float panelW = 620.0f;
+    float panelH = 520.0f;
     float panelX = WIN_W / 2.0f - panelW / 2.0f;
     float panelY = WIN_H / 2.0f - panelH / 2.0f;
 
@@ -181,7 +181,7 @@ void drawMenuInfo() {
     float ly = panelY + panelH - 40.0f;
     void* titleFont = GLUT_BITMAP_HELVETICA_18;
     void* bodyFont = GLUT_BITMAP_HELVETICA_12;
-    float lineSpacing = 22.0f;
+    float lineSpacing = 20.0f;
 
     // Title
     glColor3f(1.0f, 0.85f, 0.3f);
@@ -199,7 +199,9 @@ void drawMenuInfo() {
     ly -= lineSpacing;
     drawText((int)lx, (int)ly, "Hafalkan peta selama fase memorisasi,", bodyFont);
     ly -= lineSpacing;
-    drawText((int)lx, (int)ly, "lalu cari 3 kunci berwarna untuk mendapatkan kode exit.", bodyFont);
+    drawText((int)lx, (int)ly, "lalu cari 3 kunci berwarna", bodyFont);
+    ly -= lineSpacing;
+    drawText((int)lx, (int)ly, "untuk mendapatkan kode exit.", bodyFont);
     ly -= lineSpacing;
     drawText((int)lx, (int)ly, "Masukkan kode di pintu keluar untuk menang!", bodyFont);
     ly -= lineSpacing + 10.0f;

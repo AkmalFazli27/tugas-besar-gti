@@ -7,7 +7,7 @@
 // ============================================================
 const int   WIN_W       = 1280;
 const int   WIN_H       = 720;
-const char* WIN_NAME    = "Memory Maze — Game";
+const char* WIN_NAME    = "Memory Maze - Game";
 int   EXIT_ROW    = 13;
 int   EXIT_COL    = 13;
 const float FIRST_PERSON_FOV   = 54.0f;

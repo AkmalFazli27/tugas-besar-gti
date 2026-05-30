@@ -224,29 +224,14 @@ void drawHUD() {
     }
 
     // ============================================================
-    //  CROSSHAIR — Center
+    //  CROSSHAIR — Center (dot only)
     // ============================================================
     if (viewMode == 0 && gameState == STATE_PLAY) {
         float cx = WIN_W / 2.0f;
         float cy = WIN_H / 2.0f;
-        float gap = 6.0f;
-        float len = 14.0f;
 
         glColor4f(1.0f, 1.0f, 1.0f, 0.6f);
-        glLineWidth(1.5f);
-
-        glBegin(GL_LINES);
-            glVertex2f(cx, cy + gap); glVertex2f(cx, cy + gap + len);
-            glVertex2f(cx, cy - gap); glVertex2f(cx, cy - gap - len);
-            glVertex2f(cx + gap, cy); glVertex2f(cx + gap + len, cy);
-            glVertex2f(cx - gap, cy); glVertex2f(cx - gap - len, cy);
-        glEnd();
-
-        // Center dot
-        glColor4f(1.0f, 1.0f, 1.0f, 0.4f);
         drawFilledCircle(cx, cy, 2.0f, 12);
-
-        glLineWidth(1.0f);
     }
 
     // ============================================================

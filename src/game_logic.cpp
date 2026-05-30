@@ -70,16 +70,51 @@ void placeCodes() {
         codeCollected[i] = false;
     }
 
+    int placedKeys[CODE_COUNT][2];
+    int placedCount = 0;
+
     for (int i = 0; i < CODE_COUNT; i++) {
         int candidates[ROWS * COLS][2];
         int count = 0;
-        for (int r = 1; r < ROWS - 1; r++)
-            for (int c = 1; c < COLS - 1; c++)
-                if (reachableFromExit[r][c] && !isCellUsedForCode(r, c, used)) {
-                    candidates[count][0] = r;
-                    candidates[count][1] = c;
-                    count++;
+
+        for (int r = 1; r < ROWS - 1; r++) {
+            for (int c = 1; c < COLS - 1; c++) {
+                if (!reachableFromExit[r][c] || isCellUsedForCode(r, c, used))
+                    continue;
+
+                int distSpawn = abs(r - spawnRow) + abs(c - spawnCol);
+                if (distSpawn < 5) continue;
+
+                int distExit = abs(r - EXIT_ROW) + abs(c - EXIT_COL);
+                if (distExit < 5) continue;
+
+                bool tooClose = false;
+                for (int j = 0; j < placedCount; j++) {
+                    int distKey = abs(r - placedKeys[j][0]) + abs(c - placedKeys[j][1]);
+                    if (distKey < 5) {
+                        tooClose = true;
+                        break;
+                    }
                 }
+                if (tooClose) continue;
+
+                candidates[count][0] = r;
+                candidates[count][1] = c;
+                count++;
+            }
+        }
+
+        if (count == 0) {
+            for (int r = 1; r < ROWS - 1; r++) {
+                for (int c = 1; c < COLS - 1; c++) {
+                    if (reachableFromExit[r][c] && !isCellUsedForCode(r, c, used)) {
+                        candidates[count][0] = r;
+                        candidates[count][1] = c;
+                        count++;
+                    }
+                }
+            }
+        }
 
         int r = 1, c = 1;
         if (count > 0) {
@@ -89,6 +124,10 @@ void placeCodes() {
         }
 
         used[r][c] = true;
+        placedKeys[placedCount][0] = r;
+        placedKeys[placedCount][1] = c;
+        placedCount++;
+
         codeSpots[i].row = r;
         codeSpots[i].col = c;
         codeSpots[i].digit = codeDigits[i];

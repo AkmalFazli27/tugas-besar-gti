@@ -47,7 +47,9 @@ STATE_MENU → STATE_MEMORIZE → STATE_PLAY → STATE_ENTER_CODE → STATE_WIN/
 ## Key Conventions
 
 - **No `#include` except `game.h`** in source files. `stb_image.h` is only included in `game_state.cpp`.
-- **Maze grid**: `int maze[ROWS][COLS]` (15×15). 1 = wall, 0 = walkable. Hardcoded in `game_state.cpp`.
+- **Maze grid**: `int maze[ROWS][COLS]` (15×15). 1 = wall, 0 = walkable. Uses 11 templates (`TEMPLATES[11][15][15]` in `game_state.cpp`), randomly selected by `generateMaze()`.
+- **Spawn/exit placement**: Random from walkable cells, Manhattan distance ≥ 10 apart. Set in `generateMaze()`.
+- **Key placement**: 3 keys placed by `placeCodes()` with Manhattan distance ≥ 5 from spawn, exit, and each other. Fallback if no candidates meet distance.
 - **Coordinate system**: `cam.x/z` = world position; `playerRow()/playerCol()` = grid cell (`cam.z/CELL`, `cam.x/CELL`).
 - **Overlay rendering**: `drawExit(true)`, `drawCodeSpots(true)`, `drawSpawnOverlay()` render on top of maze (y = `W_HEIGHT + 0.05f`) for map view.
 - **viewMode**: 0 = first-person, 1 = top-down map (set during memorize and map reveal).
@@ -133,8 +135,7 @@ Allowed AI providers:
 
 ## Workspace Restrictions
 
-Agent must only operate inside:
-./project
+Agent must only operate inside the current workspace directory.
 
 Agent must not traverse parent directories.
 

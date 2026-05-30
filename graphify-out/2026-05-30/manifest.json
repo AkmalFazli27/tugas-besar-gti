@@ -1,0 +1,67 @@
+{
+  "D:\\Ameng\\Kuliah\\GTI\\tugas-besar-gti\\setup.ps1": {
+    "mtime": 1779976830.9148521,
+    "ast_hash": "2612f2ad54eec164b1525a39804d10c3",
+    "semantic_hash": "2612f2ad54eec164b1525a39804d10c3"
+  },
+  "D:\\Ameng\\Kuliah\\GTI\\tugas-besar-gti\\src\\game.h": {
+    "mtime": 1779986286.0066817,
+    "ast_hash": "441243a93e7144a800a4a4bfeb6a177a",
+    "semantic_hash": "441243a93e7144a800a4a4bfeb6a177a"
+  },
+  "D:\\Ameng\\Kuliah\\GTI\\tugas-besar-gti\\src\\game_logic.cpp": {
+    "mtime": 1779608232.462066,
+    "ast_hash": "c4142c7f2c97deddc9f87fb7f8bb3ef8",
+    "semantic_hash": "c4142c7f2c97deddc9f87fb7f8bb3ef8"
+  },
+  "D:\\Ameng\\Kuliah\\GTI\\tugas-besar-gti\\src\\game_state.cpp": {
+    "mtime": 1779969224.4474268,
+    "ast_hash": "2df78bc5c1cab1918303a70b271f0c20",
+    "semantic_hash": "2df78bc5c1cab1918303a70b271f0c20"
+  },
+  "D:\\Ameng\\Kuliah\\GTI\\tugas-besar-gti\\src\\input.cpp": {
+    "mtime": 1779977942.2767687,
+    "ast_hash": "40ab1c580fd99443d4af4a9d7ddcc2f3",
+    "semantic_hash": "40ab1c580fd99443d4af4a9d7ddcc2f3"
+  },
+  "D:\\Ameng\\Kuliah\\GTI\\tugas-besar-gti\\src\\main.cpp": {
+    "mtime": 1779970732.6788535,
+    "ast_hash": "e092c28298df1712944b7fa7686d63d3",
+    "semantic_hash": "e092c28298df1712944b7fa7686d63d3"
+  },
+  "D:\\Ameng\\Kuliah\\GTI\\tugas-besar-gti\\src\\render_helpers.cpp": {
+    "mtime": 1779970512.1979527,
+    "ast_hash": "98d50e1e716f229c80bd5dfbc2a057ad",
+    "semantic_hash": "98d50e1e716f229c80bd5dfbc2a057ad"
+  },
+  "D:\\Ameng\\Kuliah\\GTI\\tugas-besar-gti\\src\\render_hud.cpp": {
+    "mtime": 1779970630.2692268,
+    "ast_hash": "75c61ce84c901a41954663f8577e88e3",
+    "semantic_hash": "75c61ce84c901a41954663f8577e88e3"
+  },
+  "D:\\Ameng\\Kuliah\\GTI\\tugas-besar-gti\\src\\render_maze.cpp": {
+    "mtime": 1779986200.759576,
+    "ast_hash": "40566e4fed35e74764b2b919743848df",
+    "semantic_hash": "40566e4fed35e74764b2b919743848df"
+  },
+  "D:\\Ameng\\Kuliah\\GTI\\tugas-besar-gti\\src\\render_menu.cpp": {
+    "mtime": 1779970665.282386,
+    "ast_hash": "5548264f38986fb2dfd4acadd1078b09",
+    "semantic_hash": "5548264f38986fb2dfd4acadd1078b09"
+  },
+  "D:\\Ameng\\Kuliah\\GTI\\tugas-besar-gti\\src\\render_scene.cpp": {
+    "mtime": 1779986245.94917,
+    "ast_hash": "62047528e590c32aa5b0b9595185eac4",
+    "semantic_hash": "62047528e590c32aa5b0b9595185eac4"
+  },
+  "D:\\Ameng\\Kuliah\\GTI\\tugas-besar-gti\\src\\stb_image.h": {
+    "mtime": 1779803970.194353,
+    "ast_hash": "27932e6fb3a2f26aee2fc33f2cb4e696",
+    "semantic_hash": "27932e6fb3a2f26aee2fc33f2cb4e696"
+  },
+  "D:\\Ameng\\Kuliah\\GTI\\tugas-besar-gti\\src\\update.cpp": {
+    "mtime": 1779977940.5418315,
+    "ast_hash": "0f102a7cb5843a6fb6efba62beb6865c",
+    "semantic_hash": "0f102a7cb5843a6fb6efba62beb6865c"
+  }
+}

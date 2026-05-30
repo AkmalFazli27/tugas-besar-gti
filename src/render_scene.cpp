@@ -126,7 +126,7 @@ void display() {
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
         float legW = 165.0f;
-        float legH = 130.0f;
+        float legH = 170.0f;
         float legX = WIN_W - legW - 14.0f;
         float legY = 14.0f;
         float ly = legY + legH - 20.0f;

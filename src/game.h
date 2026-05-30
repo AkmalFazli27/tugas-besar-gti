@@ -28,10 +28,11 @@ const float COLLISION_MARGIN = 0.4f;
 extern GLuint texWall;
 extern GLuint texFloor;
 extern int maze[ROWS][COLS];
+extern const int TEMPLATES[11][ROWS][COLS];
 extern int spawnRow;
 extern int spawnCol;
-extern const int EXIT_ROW;
-extern const int EXIT_COL;
+extern int EXIT_ROW;
+extern int EXIT_COL;
 
 // ============================================================
 //  KONFIGURASI GAME
@@ -159,6 +160,7 @@ void computeReachableFromExit();
 void placeRandomSpawn();
 bool isCellUsedForCode(int r, int c, bool used[ROWS][COLS]);
 void placeCodes();
+void generateMaze();
 void resetGame();
 
 // Render — maze

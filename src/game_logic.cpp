@@ -97,12 +97,53 @@ void placeCodes() {
     }
 }
 
+// ============================================================
+//  GENERATE — pick random template with random spawn/exit
+// ============================================================
+void generateMaze() {
+    // 1. Pick random template
+    int pick = randRange(0, 10);
+    
+    // 2. Copy template to maze
+    for (int r = 0; r < ROWS; r++)
+        for (int c = 0; c < COLS; c++)
+            maze[r][c] = TEMPLATES[pick][r][c];
+    
+    // 3. Collect all walkable cells
+    int walkable[ROWS * COLS][2];
+    int count = 0;
+    for (int r = 1; r < ROWS - 1; r++)
+        for (int c = 1; c < COLS - 1; c++)
+            if (maze[r][c] == 0) {
+                walkable[count][0] = r;
+                walkable[count][1] = c;
+                count++;
+            }
+    
+    // 4. Pick random spawn
+    int si = randRange(0, count - 1);
+    spawnRow = walkable[si][0];
+    spawnCol = walkable[si][1];
+    
+    // 5. Pick exit far from spawn (Manhattan distance >= 10)
+    int ei;
+    int attempts = 0;
+    do {
+        ei = randRange(0, count - 1);
+        int dist = abs(walkable[ei][0] - spawnRow) + 
+                   abs(walkable[ei][1] - spawnCol);
+        if (dist >= 10) break;
+        attempts++;
+    } while (attempts < 100);
+    
+    EXIT_ROW = walkable[ei][0];
+    EXIT_COL = walkable[ei][1];
+}
+
 void resetGame() {
-    if (maze[EXIT_ROW][EXIT_COL] == 1)
-        maze[EXIT_ROW][EXIT_COL] = 0;
+    generateMaze();
 
     computeReachableFromExit();
-    placeRandomSpawn();
     placeCodes();
     memorizeTimeLeft = MEMORIZE_DURATION;
     gameTimeLeft = GAME_DURATION;
@@ -116,4 +157,9 @@ void resetGame() {
     viewMode = 1;
     gameState = STATE_MEMORIZE;
     setStatus("Hafalkan peta dan lokasi kode", 2.5f);
+    
+    // Set camera position from spawn
+    cam.x = (spawnCol + 0.5f) * CELL;
+    cam.z = (spawnRow + 0.5f) * CELL;
+    cam.angle = 0.0f;
 }
